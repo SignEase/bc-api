@@ -10,7 +10,11 @@
 2. 向云存申请一个appKey 和 appSecret
 3. 集成到项目中，maven项目可以直接使用下面的pom配置引入
 ```
-	todo
+	<dependency>
+		<groupId>com.ichaoj.ycl</groupId>
+		<artifactId>ycl-client</artifactId>
+		<version>0.0.6</version>
+	</dependency>
 ```
 
 ## API 列表
