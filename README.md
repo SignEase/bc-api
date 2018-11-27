@@ -14,7 +14,7 @@
 	<dependency>
 		<groupId>com.ichaoj.ycl</groupId>
 		<artifactId>ycl-client</artifactId>
-		<version>0.0.6</version>
+		<version>0.0.7</version>
 	</dependency>
 ```
 
