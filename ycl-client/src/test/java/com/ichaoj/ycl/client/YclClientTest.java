@@ -12,6 +12,7 @@ import java.util.List;
 import com.ichaoj.ycl.client.beans.*;
 import com.ichaoj.ycl.client.compoment.BusinessNumberUtil;
 import com.ichaoj.ycl.client.compoment.ResultBase;
+import com.ichaoj.ycl.client.compoment.StoreResult;
 import com.ichaoj.ycl.client.enums.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class YclClientTest {
 		YclDataStore yclDataStore = new YclDataStore();
 		try {
 
-			String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo10.pdf";
+			String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo7.pdf";
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 //			order.setPdfFileBase64(Base64.getEncoder().encodeToString(bytes));
 			order.setPdfFileBase64("demo3.pdf@"+encoder.encodeBuffer(bytes));
@@ -89,7 +90,7 @@ public class YclClientTest {
 		yclSignatorylist.add(yclSignatory1);
 		yclSignatorylist.add(yclSignatory2);
 
-		ResultBase result = yclClient.signatory(order);
+		StoreResult result = yclClient.signatory(order);
 		System.out.println(result.toString());
 	}
 	

@@ -48,8 +48,8 @@ public class YclClient {
 		}
 	}
 	
-	public ResultBase filePreservation(StoreApiOrder storeApiOrder){
-		ResultBase resultBase = new ResultBase();
+	public StoreResult filePreservation(StoreApiOrder storeApiOrder){
+		StoreResult resultBase = new StoreResult();
 		Map<String, String> params = new HashMap<>();
 		storeApiOrder.check();
 		//设置参数=================================================================
@@ -76,8 +76,8 @@ public class YclClient {
 		}
 	}
 	
-	public ResultBase signatory(SignatoryApiOrder order){
-		ResultBase resultBase = new ResultBase();
+	public StoreResult signatory(SignatoryApiOrder order){
+		StoreResult resultBase = new StoreResult();
 		try {
 			order.check();
 		} catch (Exception e) {

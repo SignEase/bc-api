@@ -24,25 +24,12 @@ public class ResultBase {
 		this.message = message;
 	}
 
-	/**
-	 * 存储编号
-	 */
-	private String storeNo;
 
-	public String getStoreNo() {
-		return storeNo;
-	}
-
-	public void setStoreNo(String storeNo) {
-		this.storeNo = storeNo;
-	}
-
-	@Override
-	public String toString() {
-		return "{" +
-				"success:" + success +
-				", message:'" + message + '\'' +
-				", storeNo:'" + storeNo + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "{" +
+                "success:" + success +
+                ", message:'" + message + '\'' +
+                '}';
+    }
 }
