@@ -103,14 +103,14 @@
  **返回成功示例**
 
 ```
-{success:"true", message:"保存成功"}
+{success:"true", message:"保存成功", storeNo:"YC0000000662"}
 ```
 
 
  **返回失败示例**
 
 ```
-{success:"false", message:"签名校验失败"}
+{success:"true", message:"保存成功", storeNo:"YC0000000662"}
 ```
 
  **返回参数说明**
@@ -120,6 +120,7 @@
 |:----    |:-------    |:--- |---|------      |
 |success    |boolean     |否 |  | 是否成功 true 为成功，false 为失败  |
 |message |String |否 |    |   描述  |
+|storeNo |String |否 |    |   存证编号  |
 
 
  **备注**
