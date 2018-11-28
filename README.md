@@ -10,10 +10,11 @@
 2. 向云存申请一个appKey 和 appSecret
 3. 集成到项目中，maven项目可以直接使用下面的pom配置引入
 ```
+	仓库地址：http://120.79.243.35:8081/nexus/content/groups/public/
 	<dependency>
 		<groupId>com.ichaoj.ycl</groupId>
 		<artifactId>ycl-client</artifactId>
-		<version>0.0.6</version>
+		<version>0.0.7</version>
 	</dependency>
 ```
 
