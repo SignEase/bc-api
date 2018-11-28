@@ -1,7 +1,6 @@
 package com.ichaoj.ycl.client;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,6 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ichaoj.ycl.client.compoment.ApiDataResult;
+import sun.misc.BASE64Encoder;
 
 import static com.ichaoj.ycl.client.enums.SignatoryUserTypeEnum.*;
 
@@ -39,12 +39,16 @@ public class YclClientTest {
 	
 	@Test
 	public void signtory(){
+		BASE64Encoder encoder = new BASE64Encoder();
 		SignatoryApiOrder order = new SignatoryApiOrder();
 		YclDataStore yclDataStore = new YclDataStore();
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader("d:/test.txt"));
-			order.setPdfFileBase64(reader.readLine());
-			reader.close();
+
+			String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo10.pdf";
+			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+//			order.setPdfFileBase64(Base64.getEncoder().encodeToString(bytes));
+			order.setPdfFileBase64("demo3.pdf@"+encoder.encodeBuffer(bytes));
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -52,9 +56,9 @@ public class YclClientTest {
 		yclDataStore.setUserBizNumber(BusinessNumberUtil.gainNumber());
 		yclDataStore.setStoreName("《合同名称》");
 		yclDataStore.setIsPublic(StoreVisibleEnum.PUBLIC.getCode());
-		
+
 		order.setYclDataStore(yclDataStore);
-		
+
 		//甲方
 		YclSignatory yclSignatory1 = new YclSignatory();
 		yclSignatory1.setEmail("邮箱");
@@ -67,7 +71,7 @@ public class YclClientTest {
 		yclSignatory1.setSignaturePage(1);
 		yclSignatory1.setSignatureX(0.0);
 		yclSignatory1.setSignatureY(0.0);
-		
+
 		//乙方
 		YclSignatory yclSignatory2 = new YclSignatory();
 		yclSignatory2.setEmail("邮箱");
@@ -80,11 +84,11 @@ public class YclClientTest {
 		yclSignatory2.setSignaturePage(1);
 		yclSignatory2.setSignatureX(100.0);
 		yclSignatory2.setSignatureY(100.0);
-		
+
 		List<YclSignatory> yclSignatorylist = order.getYclSignatoryList();
 		yclSignatorylist.add(yclSignatory1);
 		yclSignatorylist.add(yclSignatory2);
-		
+
 		ResultBase result = yclClient.signatory(order);
 		System.out.println(result.toString());
 	}
@@ -93,7 +97,7 @@ public class YclClientTest {
 	public void store(){
         StoreApiOrder order = new StoreApiOrder();
         try {
-            String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo3.pdf";
+            String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo10.pdf";
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
             order.setFileBase64(Base64.getEncoder().encodeToString(bytes));
         } catch (Exception e) {

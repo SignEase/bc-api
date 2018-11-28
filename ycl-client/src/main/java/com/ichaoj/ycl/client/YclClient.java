@@ -11,10 +11,7 @@ import com.ichaoj.ycl.client.beans.ApiData;
 import com.ichaoj.ycl.client.beans.ApiDataOrder;
 import com.ichaoj.ycl.client.beans.SignatoryApiOrder;
 import com.ichaoj.ycl.client.beans.StoreApiOrder;
-import com.ichaoj.ycl.client.compoment.ApiDataResult;
-import com.ichaoj.ycl.client.compoment.DateUtil;
-import com.ichaoj.ycl.client.compoment.ResultBase;
-import com.ichaoj.ycl.client.compoment.YclNetUtil;
+import com.ichaoj.ycl.client.compoment.*;
 import com.ichaoj.ycl.client.enums.Env;
 import com.ichaoj.ycl.client.enums.YclServiceEnum;
 import com.yiji.openapi.tool.fastjson.JSONObject;
@@ -71,6 +68,7 @@ public class YclClient {
 			JSONObject jsonObject = JSONObject.parseObject(json);
 			resultBase.setSuccess(jsonObject.getBooleanValue("success"));
 			resultBase.setMessage(jsonObject.getString("message"));
+			resultBase.setStoreNo(jsonObject.getString("storeNo"));
 			return resultBase;
 		} catch (IOException e) {
 			resultBase.setMessage(e.getMessage());
@@ -119,6 +117,7 @@ public class YclClient {
 			JSONObject jsonObject = JSONObject.parseObject(json);
 			resultBase.setSuccess(jsonObject.getBooleanValue("success"));
 			resultBase.setMessage(jsonObject.getString("message"));
+			resultBase.setStoreNo(jsonObject.getString("storeNo"));
 			return resultBase;
 		} catch (IOException e) {
 			resultBase.setMessage(e.getMessage());
