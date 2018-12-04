@@ -45,10 +45,9 @@ public class YclClientTest {
 		YclDataStore yclDataStore = new YclDataStore();
 		try {
 
-			String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo7.pdf";
+			String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo9.pdf";
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-//			order.setPdfFileBase64(Base64.getEncoder().encodeToString(bytes));
-			order.setPdfFileBase64("demo3.pdf@"+encoder.encodeBuffer(bytes));
+			order.setPdfFileBase64("demo8.pdf@"+encoder.encodeBuffer(bytes));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -57,34 +56,66 @@ public class YclClientTest {
 		yclDataStore.setUserBizNumber(BusinessNumberUtil.gainNumber());
 		yclDataStore.setStoreName("《合同名称》");
 		yclDataStore.setIsPublic(StoreVisibleEnum.PUBLIC.getCode());
-
+        yclDataStore.setTransAbs("这是存证说明");
 		order.setYclDataStore(yclDataStore);
 
 		//甲方
 		YclSignatory yclSignatory1 = new YclSignatory();
-		yclSignatory1.setEmail("邮箱");
-		yclSignatory1.setPhone("电话");
+		// 签约人姓名 必填
 		yclSignatory1.setRealName("姓名");
+		// 签章类型 必填
 		yclSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
-		yclSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
+		// 是否自动签约  必填
+		yclSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
+		// 签约用户类型 必填
 		yclSignatory1.setSignatoryUserType(PERSONAL.getCode());
+		// 签约时间 必填
 		yclSignatory1.setSignatoryTime("2018-2-28");
+		//签约方 必填
+		yclSignatory1.setGroup(GroupsEnum.PARTY_A);
+
+		//签约人手机邮箱 选填
+		yclSignatory1.setEmail("1111111@qq.com");
+		//签约方证件号 选填
+		yclSignatory1.setCertNo("4423355343544353ssss54");
+		//填了证件号就必选填证件类型
+		yclSignatory1.setCertType(CertTypeEnum.INSTITUTION_CODE.getCode());
+		//签章x坐标 （不填写时系统自动生成）
+		yclSignatory1.setSignatureX(100.0);
+		//签章y坐标 （不填写时系统自动生成）
+		yclSignatory1.setSignatureY(100.0);
+		//签章页 （不填时默认最后一页）
 		yclSignatory1.setSignaturePage(1);
-		yclSignatory1.setSignatureX(0.0);
-		yclSignatory1.setSignatureY(0.0);
+
 
 		//乙方
 		YclSignatory yclSignatory2 = new YclSignatory();
-		yclSignatory2.setEmail("邮箱");
-		yclSignatory2.setPhone("电话");
+		// 签约人姓名 必填
 		yclSignatory2.setRealName("姓名");
+		// 签章类型 必填
 		yclSignatory2.setSealType(SealTypeEnum.PERSONAL.getCode());
-		yclSignatory2.setSignatoryAuto(BooleanEnum.YES.getCode());
+		// 是否自动签约  必填
+		yclSignatory2.setSignatoryAuto(BooleanEnum.NO.getCode());
+		// 签约用户类型 必填
 		yclSignatory2.setSignatoryUserType(PERSONAL.getCode());
+		// 签约时间 必填
 		yclSignatory2.setSignatoryTime("2018-2-28");
-		yclSignatory2.setSignaturePage(1);
+		//签约方 必填
+		yclSignatory2.setGroup(GroupsEnum.PARTY_B);
+
+		//签约人手机邮箱 选填
+		yclSignatory2.setEmail("2222222@qq.com");
+		//签约方证件号 选填
+		yclSignatory2.setCertNo("4355343544353ssss54");
+		//填了证件号就必选填证件类型
+		yclSignatory2.setCertType(CertTypeEnum.IDENTITY_CARD.getCode());
+		//签章x坐标 （不填写时系统自动生成）
 		yclSignatory2.setSignatureX(100.0);
+		//签章y坐标 （不填写时系统自动生成）
 		yclSignatory2.setSignatureY(100.0);
+		//签章页 （不填时默认最后一页）
+		yclSignatory2.setSignaturePage(1);
+
 
 		List<YclSignatory> yclSignatorylist = order.getYclSignatoryList();
 		yclSignatorylist.add(yclSignatory1);

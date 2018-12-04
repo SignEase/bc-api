@@ -40,10 +40,10 @@ public class SignatoryApiOrder {
 			if(!ys.getSignatoryUserType().equalsIgnoreCase("ENTERPRISE")&&!ys.getSignatoryUserType().equalsIgnoreCase("PERSONAL")){
 				Assert.notNull(null, "signatory_user_type参数有误！");
 			}
-			Assert.notNull(ys.getPhone(), "phone不能为空");
-			Assert.notNull(ys.getEmail(), "email不能为空");
-			Assert.notNull(ys.getSignatureX(), "signature_x不能为空");
-			Assert.notNull(ys.getSignatureY(), "signature_y不能为空");
+
+			if(ys.getPhone() == null && ys.getEmail() == null){
+				throw new IllegalArgumentException("phone 与 email 必选一个");
+			}
 			Assert.notNull(ys.getSealType(), "sealType不能为空");
 		}
 		

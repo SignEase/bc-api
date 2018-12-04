@@ -1,7 +1,10 @@
 package com.ichaoj.ycl.client.beans;
 
+import com.ichaoj.ycl.client.enums.GroupsEnum;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 public class YclSignatory implements Serializable {
 
@@ -117,6 +120,32 @@ public class YclSignatory implements Serializable {
 	 * @mbg.generated  Fri Jan 26 15:28:58 CST 2018
 	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 证件号码
+	 */
+	private String certNo;
+
+	/**
+	 * 证件类型
+	 */
+	private String certType;
+
+	public String getCertNo() {
+		return certNo;
+	}
+
+	public void setCertNo(String certNo) {
+		this.certNo = certNo;
+	}
+
+	public String getCertType() {
+		return certType;
+	}
+
+	public void setCertType(String certType) {
+		this.certType = certType;
+	}
 
 	/**
 	 * @mbggenerated
@@ -337,6 +366,15 @@ public class YclSignatory implements Serializable {
 		this.groupName = groupName == null ? null : groupName.trim();
 	}
 
+	/**
+	 * 设置签约方
+	 * @param group
+	 */
+	public void setGroup(GroupsEnum group){
+		Objects.requireNonNull(group);
+		setGroupChar(group.getGroupChar());
+		setGroupName(group.getGroupName());
+	}
 	/**
 	 * 分组顺序
 	 * @mbggenerated
