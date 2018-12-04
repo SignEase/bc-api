@@ -2,7 +2,7 @@
 
 **简要描述：**
 
-云存链接入文档.
+云存链接入文档. master 分支 的基于jdk1.8运行。  jdkv1.7 基于jdk1.7以上版本可运行
 
 
 ## 接入步骤
@@ -11,10 +11,19 @@
 3. 集成到项目中，maven项目可以直接使用下面的pom配置引入
 ```
 	仓库地址：http://120.79.243.35:8081/nexus/content/groups/public/
+	jdk1.8 选一下依赖
 	<dependency>
 		<groupId>com.ichaoj.ycl</groupId>
 		<artifactId>ycl-client</artifactId>
 		<version>0.0.8</version>
+	</dependency>
+	
+	
+	jdk1.7 选一下依赖
+	<dependency>
+	  <groupId>com.ichaoj.ycl</groupId>
+	  <artifactId>ycl-client</artifactId>
+	  <version>0.0.9</version>
 	</dependency>
 ```
 
