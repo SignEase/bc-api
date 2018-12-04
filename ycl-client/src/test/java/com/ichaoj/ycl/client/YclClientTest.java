@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -131,7 +130,8 @@ public class YclClientTest {
         try {
             String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo10.pdf";
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-            order.setFileBase64(Base64.getEncoder().encodeToString(bytes));
+			BASE64Encoder encoder = new BASE64Encoder();
+            order.setFileBase64(encoder.encodeBuffer(bytes));
         } catch (Exception e) {
             e.printStackTrace();
         }
