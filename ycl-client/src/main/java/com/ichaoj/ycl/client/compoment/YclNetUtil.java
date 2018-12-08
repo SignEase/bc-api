@@ -1,11 +1,6 @@
 package com.ichaoj.ycl.client.compoment;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -343,6 +338,29 @@ public class YclNetUtil {
         return rsp;
     }
 
+    public static byte[] doGetDownLoad(String url, Map<String, String> params) throws IOException {
+        HttpURLConnection conn = null;
+
+        try {
+            String ctype = "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET;
+            String query = buildQuery(params, DEFAULT_CHARSET);
+            try {
+                conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype);
+            } catch (IOException e) {
+                Map<String, String> map = getParamsFromUrl(url);
+                logger.error("服务["+map.get("service")+"]请求失败+"+ e.getMessage());
+                throw e;
+            }
+
+            return getStreamAsByteArray(conn);
+
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+    }
     private static HttpURLConnection getConnection(URL url, String method,
                                                    String ctype) throws IOException {
         HttpURLConnection conn = null;
@@ -414,7 +432,7 @@ public class YclNetUtil {
         return query.toString();
     }
 
-    protected static String getResponseAsString(HttpURLConnection conn) throws IOException {
+    protected static String  getResponseAsString(HttpURLConnection conn) throws IOException {
         String charset = getResponseCharset(conn.getContentType());
         InputStream es = conn.getErrorStream();
         if (es == null) {
@@ -429,6 +447,40 @@ public class YclNetUtil {
         }
     }
 
+    private static byte[] getStreamAsByteArray(HttpURLConnection conn) throws IOException{
+
+        InputStream errorStream = conn.getErrorStream();
+        if(errorStream == null){
+            return getStreamAsByteArray(conn.getInputStream());
+        } else {
+            String charset = getResponseCharset(conn.getContentType());
+            String msg = getStreamAsString(errorStream, charset);
+            if (StringUtils.isEmpty(msg)) {
+                throw new IOException(conn.getResponseCode() + ":" + conn.getResponseMessage());
+            } else {
+                throw new IOException(msg);
+            }
+        }
+
+    }
+
+    private static byte[] getStreamAsByteArray(InputStream stream) throws IOException{
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        byte [] bytes = new byte[1024];
+        int index;
+        try {
+            while ( (index = stream.read(bytes)) != -1){
+                byteArrayOutputStream.write(bytes,0,index);
+            }
+            return byteArrayOutputStream.toByteArray();
+        } finally {
+            byteArrayOutputStream.close();
+            stream.close();
+        }
+
+    }
     private static String getStreamAsString(InputStream stream, String charset) throws IOException {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charset));
