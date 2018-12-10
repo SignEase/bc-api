@@ -2,19 +2,20 @@
 
 **简要描述：**
 
-云存链接入文档.
+云存链接入文档. master 分支 的基于jdk1.8运行。  jdkv1.7 基于jdk1.7以上版本可运行.
 
 
 ## 接入步骤
 1. 创建云存账户
 2. 向云存申请一个appKey 和 appSecret
 3. 集成到项目中，maven项目可以直接使用下面的pom配置引入
+
 ```
 	仓库地址：http://120.79.243.35:8081/nexus/content/groups/public/
 	<dependency>
-		<groupId>com.ichaoj.ycl</groupId>
-		<artifactId>ycl-client</artifactId>
-		<version>0.0.8</version>
+	  <groupId>com.ichaoj.ycl</groupId>
+	  <artifactId>ycl-client</artifactId>
+	  <version>0.1.0</version>
 	</dependency>
 ```
 
@@ -153,7 +154,231 @@
 		System.out.println(result.toString());
 	}
 
+ #### 接口三  电子签约
+
+**简要描述：**
+- 注：签约方必须包含甲方，
+
+- 用户可以通过云存平台发起一次电子签约，可以有**多签约人**和**多签约方**，目前支持**自动签约**和**手动签约**两种方式。一次电子签约里，可以为不同的签约人选择**自动签约**与**手动签约**，即一份签约文件里面可以存在多种签约方式。
+
+- **自动签约：**为签约人指定**自动签约**时，将不会发送签约邀请链接。系统会自动为该签约人完成签约加上签约印章。
+- **手动签约: **为签约人指定**手动签约**时，系统将会发送一条签约邀请到该签约人。如果签约人存邮箱将通过邮件的方式发送，如果存在手机将通过短信进行发送。用户需根据签约链接指引完成签约。
+
+
+**参数：(SignatoryApiOrder.java)**
+
+|字段|类型|空|默认|注释|
+|:----    |:-------    |:--- |---|------      |
+|pdfFileBase64    |String     |否 |  | 文件内容    （格式要求为: 文件名 + @ + 文件的Base64编码）        |
+|yclDataStore |YclDataStore |否 |    |   合同基本信息  |
+|yclSignatory |YclSignatory |否   |    |   签约人信息    |
+
+
+ **备注**
 
 
 
 
+ **返回成功示例**
+
+```
+{success:"true", message:"保存成功", storeNo:"YC0000000662"}
+```
+
+
+ **返回失败示例**
+
+```
+{success:"false", message:"pdfFileBase64格式错误，需要格式:文件名@base64编码字符串", storeNo:""}
+```
+
+ **返回参数说明**
+
+
+|字段|类型|空|默认|注释|
+|:----    |:-------    |:--- |---|------      |
+|success    |boolean     |否 |  | 是否成功 true 为成功，false 为失败  |
+|message |String |否 |    |   描述  |
+|storeNo |String |否 |    |   存证编号  |
+
+
+ **备注**
+
+
+
+ **示例代码**
+
+	@Test
+	public void signtory(){
+		BASE64Encoder encoder = new BASE64Encoder();
+		SignatoryApiOrder order = new SignatoryApiOrder();
+		YclDataStore yclDataStore = new YclDataStore();
+		try {
+
+			String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo9.pdf";
+			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+			order.setPdfFileBase64("demo8.pdf@"+encoder.encodeBuffer(bytes));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//合同基本信息
+		yclDataStore.setUserBizNumber(BusinessNumberUtil.gainNumber());
+		yclDataStore.setStoreName("《合同名称》");
+		yclDataStore.setIsPublic(StoreVisibleEnum.PUBLIC.getCode());
+        yclDataStore.setTransAbs("这是存证说明");
+		order.setYclDataStore(yclDataStore);
+
+		//甲方
+		YclSignatory yclSignatory1 = new YclSignatory();
+		// 签约人姓名 必填
+		yclSignatory1.setRealName("姓名");
+		// 签章类型 必填
+		yclSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
+		// 是否自动签约  必填
+		yclSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
+		// 签约用户类型 必填
+		yclSignatory1.setSignatoryUserType(PERSONAL.getCode());
+		// 签约时间 必填
+		yclSignatory1.setSignatoryTime("2018-2-28");
+		//签约方 必填
+		yclSignatory1.setGroup(GroupsEnum.PARTY_A);
+
+		//签约人手机邮箱 选填
+		yclSignatory1.setEmail("1111111@qq.com");
+		//签约方证件号 选填
+		yclSignatory1.setCertNo("4423355343544353ssss54");
+		//填了证件号就必选填证件类型
+		yclSignatory1.setCertType(CertTypeEnum.UNIFIED_SOCIAL_CREDIT_CODE.getCode());
+		//签章x坐标 （不填写时系统自动生成）
+		yclSignatory1.setSignatureX(100.0);
+		//签章y坐标 （不填写时系统自动生成）
+		yclSignatory1.setSignatureY(100.0);
+		//签章页 （不填时默认最后一页）
+		yclSignatory1.setSignaturePage(1);
+
+
+		//乙方
+		YclSignatory yclSignatory2 = new YclSignatory();
+		// 签约人姓名 必填
+		yclSignatory2.setRealName("姓名");
+		// 签章类型 必填
+		yclSignatory2.setSealType(SealTypeEnum.PERSONAL.getCode());
+		// 是否自动签约  必填
+		yclSignatory2.setSignatoryAuto(BooleanEnum.NO.getCode());
+		// 签约用户类型 必填
+		yclSignatory2.setSignatoryUserType(PERSONAL.getCode());
+		// 签约时间 必填
+		yclSignatory2.setSignatoryTime("2018-2-28");
+		//签约方 必填
+		yclSignatory2.setGroup(GroupsEnum.PARTY_B);
+
+		//签约人手机邮箱 选填
+		yclSignatory2.setEmail("2222222@qq.com");
+		//签约方证件号 选填
+		yclSignatory2.setCertNo("4355343544353ssss54");
+		//填了证件号就必选填证件类型
+		yclSignatory2.setCertType(CertTypeEnum.IDENTITY_CARD.getCode());
+		//签章x坐标 （不填写时系统自动生成）
+		yclSignatory2.setSignatureX(100.0);
+		//签章y坐标 （不填写时系统自动生成）
+		yclSignatory2.setSignatureY(100.0);
+		//签章页 （不填时默认最后一页）
+		yclSignatory2.setSignaturePage(1);
+
+
+		List<YclSignatory> yclSignatorylist = order.getYclSignatoryList();
+		yclSignatorylist.add(yclSignatory1);
+		yclSignatorylist.add(yclSignatory2);
+
+		StoreResult result = yclClient.signatory(order);
+		System.out.println(result.toString());
+	}
+
+
+#### 通用对象属性
+
+
+ **文件基本信息 YclDataStore.java**
+ 
+|字段|类型|可为空|默认|注释|
+| ------------ | ------------ | ------------ | ------------ | ------------ |
+|userBizNumber   |String   |否   |   |用户业务ID 具体生成方式请看示例代码   |
+|storeName   |String   |否   |   |签约文件名称   |
+|isPublic   |String   |否   |   |是否公开（PUBLIC or PRIVATE ）   |
+|transAbs   |String   |是   |   |签约说明   |
+
+
+ **签约人信息 YclSignatory.java**
+ 
+|字段|类型|可为空|默认|注释|
+| ------------ | ------------ | ------------ | ------------ | ------------ |
+|realName   |String   |否   |   |签约人姓名   |
+|sealType   |String   |否   |   |签章类型， 公章（official）or 私章(personal)  |
+|signatoryAuto   |String   |否   |   |是否自动签约 自动（YES） or 手动（NO）   |
+|signatoryUserType   |String   |否   |   |签约用户类型 个人（PERSONAL） or 企业（ENTERPRISE）   |
+|signatoryTime   |String   |否   |   |签约时间   |
+|group   |GroupsEnum   |否   |   |签约方   |
+|phone   |String   |是   |   |签约人手机号码（手机邮箱至少选择其中一个）   |
+|email   |String   |是   |   |签约人手机邮箱 （手机邮箱至少选择其中一个）  |
+|certNo   |String   |是   |   |签约方证件号   |
+|certType   |String   |是   |   |签约方证件类型（填了证件号就必选填证件类型）("ID","身份证")("INSTITUTION_CODE","组织机构代码证")BUSINESS_LICENCE("BUSINESS_LICENCE","营业执照")   |
+|signatureX   |String   |是   |   |签章x坐标 （不填写时系统自动生成）  |
+|signatureY   |Double   |是   |   |签章y坐标 （不填写时系统自动生成）  |
+|signaturePage   |Integer   |是   |   |签章页 （不填时默认最后一页）  |
+|keywords   |String   |否   |   |签章定位关键词 |
+
+#### 接口四 文件下载
+**简要描述：**
+
+- 获取存储或电子签约的文件，返回的是数据流
+
+
+**参数：**
+
+|字段|类型|可为空|默认|注释|
+| ------------ | ------------ | ------------ | ------------ | ------------ |
+|storeNo   |String   |否   |   |存储编号   |
+
+ **返回成功示例**
+
+```
+
+```
+
+ **返回参数说明**
+~
+
+ **返回失败示例**
+
+```
+
+```
+
+ **返回参数说明**
+ 
+
+ **示例代码**
+
+	public static YclClient yclClient;
+	
+	@BeforeClass
+	public static void init(){
+		yclClient = new YclClient("您的appKey","您的appSercret",Env.LOCAL);
+	}
+
+	/**
+	 * 文件取回
+	 */
+	@Test
+	public void fileDownloadTest() throws IOException {
+
+
+        byte[] fileContent = yclClient.downloadFile("YC0000000336");
+        FileOutputStream outputStream = new FileOutputStream("I:\\testdownload2.pdf");
+
+
+       outputStream.write(fileContent);
+    }
+
+ **备注**
