@@ -20,13 +20,11 @@ import com.yiji.openapi.tool.util.DigestUtil.DigestALGEnum;
 
 public class YclClient {
 	
-	private YclClient(){}
-	
+
 	private String appKey;
 	private String appSecret;
 	private Env env;
-	private String[] group = new String[]{"a","b","c","d","e","f","g","h","i","j","k"};
-	private String[] groupName = new String[]{"甲方","乙方","丙方","丁方","戊方","己方","庚方","辛方","壬方","癸方","子方"};
+
 	
 	public YclClient(String appKey,String appSecret,Env env){
 		this.appKey = appKey;
@@ -112,14 +110,19 @@ public class YclClient {
 			params.put("yclSignatoryList["+i+"].signatoryUserType", order.getYclSignatoryList().get(i).getSignatoryUserType());
 			params.put("yclSignatoryList["+i+"].signatoryTime", order.getYclSignatoryList().get(i).getSignatoryTime());
 
+			params.put("yclSignatoryList["+i+"].certNo", order.getYclSignatoryList().get(i).getCertNo());
+			params.put("yclSignatoryList["+i+"].certType", order.getYclSignatoryList().get(i).getCertType());
+			params.put("yclSignatoryList["+i+"].keywords", order.getYclSignatoryList().get(i).getKeywords());
 			if (order.getYclSignatoryList().get(i).getSignatureX() != null){
 				params.put("yclSignatoryList["+i+"].signatureX", String.valueOf(order.getYclSignatoryList().get(i).getSignatureX()));
 			}
 			if(order.getYclSignatoryList().get(i).getSignatureY() !=null){
 				params.put("yclSignatoryList["+i+"].signatureY", String.valueOf(order.getYclSignatoryList().get(i).getSignatureY()));
 			}
+			if(order.getYclSignatoryList().get(i).getSignaturePage() != null){
+				params.put("yclSignatoryList["+i+"].signaturePage", String.valueOf(order.getYclSignatoryList().get(i).getSignaturePage()));
+			}
 
-			params.put("yclSignatoryList["+i+"].signaturePage", String.valueOf(order.getYclSignatoryList().get(i).getSignaturePage()));
 		}
 		
 		String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
@@ -137,67 +140,35 @@ public class YclClient {
 			return resultBase;
 		}
 	}
-	
-	public ApiDataResult data(ApiDataOrder order) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		ApiDataResult resultBase = new ApiDataResult();
-		try {
-			order.check();
-		} catch (Exception e) {
-			resultBase.setMessage(e.getMessage());
-			return resultBase;
-		}
-		
-		Map<String, String> params = new HashMap<>();
-		params.put("appKey", this.appKey);
-		params.put("appSecret", this.appSecret);
-		
-		Method[] methods = ApiData.class.getDeclaredMethods();
-		for(int i = 0; i < order.getApiDatas().size(); i++){
-			for (Method method : methods) {
-				if(method.getName().startsWith("get")) {
-					String methodName = method.getName();
-					String returnType = method.getGenericReturnType().toString();
-					String propertyName = methodName.substring(3, 4).toLowerCase() + methodName.substring(4);
-					if("class java.lang.Long".equals(returnType)) {
-						Method  method2 = order.getApiDatas().get(i).getClass().getDeclaredMethod(methodName);
-						Object object = method2.invoke(order.getApiDatas().get(i));
-						if(object != null) {
-							params.put("apiDatas["+i+"]." + propertyName, String.valueOf((Long)object));
-						}
-					}else if("class java.util.Date".equals(returnType)){
-						Method  method2 = order.getApiDatas().get(i).getClass().getDeclaredMethod(methodName);
-						Object object = method2.invoke(order.getApiDatas().get(i));
-						if(object != null) {
-							if(!"null".equalsIgnoreCase(String.valueOf(DateUtil.dtSimpleYmdhmsDate((Date)object)))) {
-								params.put("apiDatas["+i+"]." + propertyName, String.valueOf(DateUtil.dtSimpleYmdhmsDate((Date)object)));
-							}
-						}
-					}else if("class java.lang.String".equals(returnType)){
-						Method  method2 = order.getApiDatas().get(i).getClass().getDeclaredMethod(methodName);
-						Object object = method2.invoke(order.getApiDatas().get(i));
-						if(object != null) {
-							String str = String.valueOf((String)object);
-							if(str != "" || str.length() > 0) {
-								params.put("apiDatas["+i+"]." + propertyName, str);
-							}
-						}
-					}
-				}
-			}
-		}
-		String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
-		params.put("sign", signStr);
-		try {
-			String json = YclNetUtil.doPost(env.getCode()+YclServiceEnum.DATA.getCode(), params, 30000, 30000);
-			
-			JSONObject jsonObject = JSONObject.parseObject(json);
-			resultBase.setSuccess(jsonObject.getBooleanValue("success"));
-			resultBase.setMessage(jsonObject.getString("message"));
-			resultBase.setHash(jsonObject.getString("hash"));
-			return resultBase;
-		} catch (IOException e) {
-			resultBase.setMessage(e.getMessage());
-			return resultBase;
-		}
-	}
+
+    /**
+     * 云存文件取回
+     * @param storeNo 存储编号
+     */
+	public byte[] downloadFile(String storeNo){
+        Map<String, String> params = new HashMap<>(3);
+        params.put("appKey", this.appKey);
+        params.put("appSecret", this.appSecret);
+        params.put("storeNo",storeNo);
+
+        try {
+            return YclNetUtil.doGetDownLoad(env.getCode() +YclServiceEnum.FILE_DOWNLOAD.getCode(), params);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String doGet(YclServiceEnum yclServiceEnum, Map<String, String> params) throws IOException {
+	    String reqUrl = env.getCode()+yclServiceEnum.getCode();
+	    return YclNetUtil.doGet(reqUrl,params);
+    }
+
+    private String  doPost(YclServiceEnum yclServiceEnum,Map<String, String> params, int connectTimeout,
+                           int readTimeout) throws IOException {
+        String reqUrl = env.getCode()+yclServiceEnum.getCode();
+        return YclNetUtil.doPost(reqUrl,params,connectTimeout,readTimeout);
+    }
+
+
 }
