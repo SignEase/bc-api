@@ -110,8 +110,7 @@ public class YclClient {
 			params.put("yclSignatoryList["+i+"].signatoryUserType", order.getYclSignatoryList().get(i).getSignatoryUserType());
 			params.put("yclSignatoryList["+i+"].signatoryTime", order.getYclSignatoryList().get(i).getSignatoryTime());
 
-			params.put("yclSignatoryList["+i+"].certNo", order.getYclSignatoryList().get(i).getCertNo());
-			params.put("yclSignatoryList["+i+"].certType", order.getYclSignatoryList().get(i).getCertType());
+
 			params.put("yclSignatoryList["+i+"].keywords", order.getYclSignatoryList().get(i).getKeywords());
 			if (order.getYclSignatoryList().get(i).getSignatureX() != null){
 				params.put("yclSignatoryList["+i+"].signatureX", String.valueOf(order.getYclSignatoryList().get(i).getSignatureX()));
@@ -121,6 +120,11 @@ public class YclClient {
 			}
 			if(order.getYclSignatoryList().get(i).getSignaturePage() != null){
 				params.put("yclSignatoryList["+i+"].signaturePage", String.valueOf(order.getYclSignatoryList().get(i).getSignaturePage()));
+			}
+
+			if(order.getYclSignatoryList().get(i).getCertNo() != null){
+				params.put("yclSignatoryList["+i+"].certNo", order.getYclSignatoryList().get(i).getCertNo());
+				params.put("yclSignatoryList["+i+"].certType", order.getYclSignatoryList().get(i).getCertType());
 			}
 
 		}
