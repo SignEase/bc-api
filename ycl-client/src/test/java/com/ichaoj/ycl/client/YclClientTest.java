@@ -27,6 +27,7 @@ public class YclClientTest {
 	@BeforeClass
 	public static void init(){
 		yclClient = new YclClient("您的appKey","您的appSecret",Env.TEST);
+
 	}
 
 
@@ -82,7 +83,7 @@ public class YclClientTest {
 		//签约人手机邮箱 选填
 		yclSignatory1.setEmail("zjq115097475@qq.com");
 		//签约方证件号 选填
-		yclSignatory1.setCertNo("24324342342323234243");
+//		yclSignatory1.setCertNo("24324342342323234243");
 		//填了证件号就必选填证件类型
 		yclSignatory1.setCertType(CertTypeEnum.INSTITUTION_CODE.getCode());
 		//签章x坐标 （不填写时系统自动生成）
@@ -91,7 +92,7 @@ public class YclClientTest {
 		yclSignatory1.setSignatureY(100.0);
 		//签章页 （不填时默认最后一页）
 		yclSignatory1.setSignaturePage(1);
-		yclSignatory1.setKeywords("甲方");
+		yclSignatory1.setKeywords("开户银行");
 
 
 		//乙方
@@ -111,7 +112,8 @@ public class YclClientTest {
 		yclSignatory2.setGroupName("乙方");
 
 		//签约人手机邮箱 选填
-		yclSignatory2.setEmail("888888@qq.com");
+//		yclSignatory2.setEmail("888888@qq.com");
+		yclSignatory2.setPhone("15123164744");
 		//签约方证件号 选填
 		yclSignatory2.setCertNo("4355343544353ssss54");
 		//填了证件号就必选填证件类型
@@ -122,12 +124,12 @@ public class YclClientTest {
 		yclSignatory2.setSignatureY(100.0);
 		//签章页 （不填时默认最后一页）
 		yclSignatory2.setSignaturePage(1);
-		yclSignatory2.setKeywords("乙方");
+		yclSignatory2.setKeywords("开户银行");
 
 		//乙方
 		YclSignatory yclSignatory3 = new YclSignatory();
 		// 签约人姓名 必填
-		yclSignatory3.setRealName("乙方2");
+		yclSignatory3.setRealName("开户银行");
 		// 签章类型 必填
 		yclSignatory3.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
@@ -141,7 +143,8 @@ public class YclClientTest {
 		yclSignatory3.setGroupName("乙方");
 
 		//签约人手机邮箱 选填
-		yclSignatory3.setEmail("2222222@qq.com");
+//		yclSignatory3.setEmail("2222222@qq.com");
+		yclSignatory3.setPhone("15123164744");
 		//签约方证件号 选填
 		yclSignatory3.setCertNo("4355343544353");
 		//填了证件号就必选填证件类型
@@ -149,7 +152,7 @@ public class YclClientTest {
 
 		//签章页 （不填时默认最后一页）
 //		yclSignatory3.setSignaturePage(1);
-		yclSignatory3.setKeywords("乙方");
+		yclSignatory3.setKeywords("开户银行");
 
 		List<YclSignatory> yclSignatorylist = order.getYclSignatoryList();
 		yclSignatorylist.add(yclSignatory1);
@@ -191,7 +194,7 @@ public class YclClientTest {
 	public void fileDownloadTest() throws IOException {
 
 
-        byte[] fileContent = yclClient.downloadFile("YC0000000336");
+        byte[] fileContent = yclClient.downloadFile("YC0000051112");
         FileOutputStream outputStream = new FileOutputStream("I:\\testdownload2.pdf");
 
 
