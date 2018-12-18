@@ -16,7 +16,7 @@ public class SignatoryApiOrder {
 	
 	private YclDataStore yclDataStore;
 	
-	private List<YclSignatory> yclSignatoryList = new ArrayList<YclSignatory>();
+	private List<YclSignatory> yclSignatoryList = new ArrayList<>();
 	
 	private String pdfFileBase64;
 	
@@ -119,7 +119,7 @@ public class SignatoryApiOrder {
 		if (signatoryUserType == null){
 			return false;
 		}
-		return signatoryUserType.equalsIgnoreCase("ENTERPRISE") || signatoryUserType.equalsIgnoreCase("PERSONAL");
+		return "ENTERPRISE".equalsIgnoreCase(signatoryUserType) || "PERSONAL".equalsIgnoreCase(signatoryUserType);
 	}
 	/**
 	 * 检查签约方

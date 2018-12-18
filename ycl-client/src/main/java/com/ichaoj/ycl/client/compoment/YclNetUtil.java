@@ -34,7 +34,7 @@ public class YclNetUtil {
 
     private static SSLContext       ctx             = null;
 
-    private static HostnameVerifier verifier        = null;
+    private static HostnameVerifier verifier;
 
     private static SSLSocketFactory socketFactory   = null;
 
@@ -308,7 +308,7 @@ public class YclNetUtil {
     public static String doGet(String url, Map<String, String> params,
                                String charset) throws IOException {
         HttpURLConnection conn = null;
-        String rsp = null;
+        String rsp;
 
         try {
             String ctype = "application/x-www-form-urlencoded;charset=" + charset;
@@ -355,7 +355,7 @@ public class YclNetUtil {
     }
     private static HttpURLConnection getConnection(URL url, String method,
                                                    String ctype) throws IOException {
-        HttpURLConnection conn = null;
+        HttpURLConnection conn;
         if ("https".equals(url.getProtocol())) {
             HttpsURLConnection connHttps = (HttpsURLConnection) url.openConnection();
             connHttps.setSSLSocketFactory(socketFactory);
@@ -479,7 +479,7 @@ public class YclNetUtil {
             StringWriter writer = new StringWriter();
 
             char[] chars = new char[256];
-            int count = 0;
+            int count;
             while ((count = reader.read(chars)) > 0) {
                 writer.write(chars, 0, count);
             }
@@ -541,7 +541,7 @@ public class YclNetUtil {
      * @param charset 字符集
      * @return 反编码后的参数值
      */
-    public static String decode(String value, String charset) {
+    private static String decode(String value, String charset) {
         String result = null;
         if (!StringUtils.isEmpty(value)) {
             try {
@@ -560,7 +560,7 @@ public class YclNetUtil {
      * @param charset 字符集
      * @return 编码后的参数值
      */
-    public static String encode(String value, String charset) {
+    private static String encode(String value, String charset) {
         String result = null;
         if (!StringUtils.isEmpty(value)) {
             try {
@@ -590,13 +590,13 @@ public class YclNetUtil {
      * @return 参数映射
      */
     public static Map<String, String> splitUrlQuery(String query) {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
 
         String[] pairs = query.split("&");
         if (pairs != null && pairs.length > 0) {
             for (String pair : pairs) {
                 String[] param = pair.split("=", 2);
-                if (param != null && param.length == 2) {
+                if (param.length == 2) {
                     result.put(param[0], param[1]);
                 }
             }
@@ -619,8 +619,7 @@ public class YclNetUtil {
         sb.append("<input type=\"submit\" value=\"立即支付\" style=\"display:none\" >\n");
         sb.append("</form>\n");
         sb.append("<script>document.forms[0].submit();</script>");
-        String form = sb.toString();
-        return form;
+        return sb.toString();
     }
 
     private static String buildHiddenFields(Map<String, String> parameters) {
@@ -637,8 +636,7 @@ public class YclNetUtil {
             }
             sb.append(buildHiddenField(key, value));
         }
-        String result = sb.toString();
-        return result;
+        return sb.toString();
     }
 
     private static String buildHiddenField(String key, String value) {
