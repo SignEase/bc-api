@@ -27,7 +27,6 @@ public class YclClientTest {
 	@BeforeClass
 	public static void init(){
 		yclClient = new YclClient("您的appKey","您的appSecret",Env.TEST);
-
 	}
 
 
@@ -150,15 +149,14 @@ public class YclClientTest {
 		//填了证件号就必选填证件类型
 		yclSignatory3.setCertType(CertTypeEnum.IDENTITY_CARD.getCode());
 
-		//签章页 （不填时默认最后一页）
-//		yclSignatory3.setSignaturePage(1);
-		yclSignatory3.setKeywords("开户银行");
 
 		List<YclSignatory> yclSignatorylist = order.getYclSignatoryList();
 		yclSignatorylist.add(yclSignatory1);
 		yclSignatorylist.add(yclSignatory2);
 		yclSignatorylist.add(yclSignatory3);
-
+		yclSignatory3.setSignatureX(20.0);
+		yclSignatory3.setSignatureY(20.0);
+		yclSignatory3.setSignaturePage(2);
 		StoreResult result = yclClient.signatory(order);
 		System.out.println(result.toString());
 	}
@@ -194,7 +192,7 @@ public class YclClientTest {
 	public void fileDownloadTest() throws IOException {
 
 
-        byte[] fileContent = yclClient.downloadFile("YC0000051112");
+        byte[] fileContent = yclClient.downloadFile("YC0000000586");
         FileOutputStream outputStream = new FileOutputStream("I:\\testdownload2.pdf");
 
 
