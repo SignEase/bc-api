@@ -339,21 +339,13 @@ public class YclNetUtil {
     }
 
     public static byte[] doGetDownLoad(String url, Map<String, String> params) throws IOException {
-        HttpURLConnection conn = null;
+        String ctype = "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET;
+        String query = buildQuery(params, DEFAULT_CHARSET);
+        HttpURLConnection conn =  getConnection(buildGetUrl(url, query), METHOD_GET, ctype);
+
 
         try {
-            String ctype = "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET;
-            String query = buildQuery(params, DEFAULT_CHARSET);
-            try {
-                conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype);
-            } catch (IOException e) {
-                Map<String, String> map = getParamsFromUrl(url);
-                logger.error("服务["+map.get("service")+"]请求失败+"+ e.getMessage());
-                throw e;
-            }
-
             return getStreamAsByteArray(conn);
-
         } finally {
             if (conn != null) {
                 conn.disconnect();
