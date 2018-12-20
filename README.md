@@ -233,29 +233,30 @@
 		YclSignatory yclSignatory1 = new YclSignatory();
 		// 签约人姓名 必填
 		yclSignatory1.setRealName("姓名");
+		yclSignatory1.setSealPurpose("合同专用章");
 		// 签章类型 必填
-		yclSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
+		yclSignatory1.setSealType(SealTypeEnum.OFFICIAL.getCode());
 		// 是否自动签约  必填
-		yclSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
+		yclSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
 		// 签约用户类型 必填
 		yclSignatory1.setSignatoryUserType(PERSONAL.getCode());
 		// 签约时间 必填
 		yclSignatory1.setSignatoryTime("2018-2-28");
 		//签约方 必填
 		yclSignatory1.setGroup(GroupsEnum.PARTY_A);
+		yclSignatory1.setGroupName("甲");
 
 		//签约人手机邮箱 选填
-		yclSignatory1.setEmail("1111111@qq.com");
-		//签约方证件号 选填
-		yclSignatory1.setCertNo("4423355343544353ssss54");
+		yclSignatory1.setEmail("zjq115097475@qq.com");
 		//填了证件号就必选填证件类型
-		yclSignatory1.setCertType(CertTypeEnum.UNIFIED_SOCIAL_CREDIT_CODE.getCode());
+		yclSignatory1.setCertType(CertTypeEnum.INSTITUTION_CODE.getCode());
 		//签章x坐标 （不填写时系统自动生成）
 		yclSignatory1.setSignatureX(100.0);
 		//签章y坐标 （不填写时系统自动生成）
 		yclSignatory1.setSignatureY(100.0);
 		//签章页 （不填时默认最后一页）
 		yclSignatory1.setSignaturePage(1);
+		yclSignatory1.setKeywords("开户银行");
 
 
 		//乙方
