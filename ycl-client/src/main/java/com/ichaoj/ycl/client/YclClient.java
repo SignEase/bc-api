@@ -130,6 +130,10 @@ public class YclClient {
                 params.put("yclSignatoryList["+i+"].certType", order.getYclSignatoryList().get(i).getCertType());
             }
 
+            if(order.getYclSignatoryList().get(i).getSealPurpose() != null){
+				params.put("yclSignatoryList["+i+"].sealPurpose", order.getYclSignatoryList().get(i).getSealPurpose());
+			}
+
 		}
 		
 		String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);

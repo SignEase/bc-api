@@ -27,6 +27,7 @@ public class YclClientTest {
 	@BeforeClass
 	public static void init(){
 		yclClient = new YclClient("您的appKey","您的appSecret",Env.TEST);
+
 	}
 
 
@@ -67,8 +68,9 @@ public class YclClientTest {
 		YclSignatory yclSignatory1 = new YclSignatory();
 		// 签约人姓名 必填
 		yclSignatory1.setRealName("姓名");
+		yclSignatory1.setSealPurpose("合同专用章");
 		// 签章类型 必填
-		yclSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
+		yclSignatory1.setSealType(SealTypeEnum.OFFICIAL.getCode());
 		// 是否自动签约  必填
 		yclSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
 		// 签约用户类型 必填
@@ -192,10 +194,15 @@ public class YclClientTest {
 	public void fileDownloadTest() throws IOException {
 
 
-        byte[] fileContent = yclClient.downloadFile("YC0000000586");
+        byte[] fileContent = yclClient.downloadFile("YC0000011586");
         FileOutputStream outputStream = new FileOutputStream("I:\\testdownload2.pdf");
 
 
        outputStream.write(fileContent);
     }
+
+	public static void main(String[] args) {
+
+
+	}
 }

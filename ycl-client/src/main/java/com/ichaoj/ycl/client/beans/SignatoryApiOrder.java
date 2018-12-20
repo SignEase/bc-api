@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.ichaoj.ycl.client.enums.SealTypeEnum;
 import com.ichaoj.ycl.client.util.Assert;
 import com.yiji.openapi.tool.util.StringUtils;
 
@@ -39,6 +40,10 @@ public class SignatoryApiOrder {
 
 		for(YclSignatory ys:yclSignatoryList){
 			Assert.notNull(ys, "签约人不能为空");
+
+			if(SealTypeEnum.OFFICIAL.getCode().equals(ys.getSealType())){
+				Assert.notNull(ys.getSealPurpose(),"sealPurpose不能为空");
+			}
 			Assert.notNull(ys.getRealName(), "RealName不能为空");
 			Assert.notNull(ys.getSignatoryTime(), "SignatoryTime不能为空");
 			Assert.notNull(ys.getSignatoryAuto(), "SignatoryAuto不能为空");
@@ -49,8 +54,8 @@ public class SignatoryApiOrder {
 			checkContactWay(ys.getPhone(),ys.getEmail());
 			if(StringUtils.isNotEmpty(ys.getCertNo())){
 				Assert.notNull(ys.getCertType(),"CertType不能为空");
-
 			}
+
 			Assert.isTrue(checkSealPosition(ys),"签章定位参数错误");
 			Assert.notNull(ys.getGroupChar(), "groupChar不能为空");
 			Assert.notNull(ys.getGroupName(), "groupName不能为空");

@@ -131,7 +131,16 @@ public class YclSignatory implements Serializable {
 	 */
 	private String certType;
 
-	public String keywords;
+	/**
+	 * 定位关键词
+	 */
+	private String keywords;
+
+	/**
+	 * 印章用途
+	 */
+	private String sealPurpose;
+
 
 	public String getCertNo() {
 		return certNo;
@@ -545,6 +554,14 @@ public class YclSignatory implements Serializable {
 			}
 		}
 		this.keywords = builder.toString();
+	}
+
+	public String getSealPurpose() {
+		return sealPurpose;
+	}
+
+	public void setSealPurpose(String sealPurpose) {
+		this.sealPurpose = sealPurpose;
 	}
 
 	/**
