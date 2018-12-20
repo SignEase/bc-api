@@ -15,7 +15,7 @@
 	<dependency>
 	  <groupId>com.ichaoj.ycl</groupId>
 	  <artifactId>ycl-client</artifactId>
-	  <version>0.1.0</version>
+	  <version>0.1.1</version>
 	</dependency>
 ```
 
@@ -327,6 +327,7 @@
 |signatureY   |Double   |是   |   |签章y坐标 （不填写时系统自动生成）  |
 |signaturePage   |Integer   |是   |   |签章页 （不填时默认最后一页）  |
 |keywords   |String   |否   |   |签章定位关键词 |
+|sealPurpose   |String   |否   |   |章的用图(签章类型为企业是必填) |
 
 #### 接口四 文件下载
 **简要描述：**
