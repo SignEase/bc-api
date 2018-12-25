@@ -11,7 +11,18 @@
 3. 集成到项目中，maven项目可以直接使用下面的pom配置引入
 
 ```
-	仓库地址：http://120.79.243.35:8081/nexus/content/groups/public/
+	仓库地址：
+	<repositories>
+		<repository>
+			<id>tgs</id>
+			<name>tgs repository</name>
+			<url>http://120.79.243.35:8081/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+	
 	<dependency>
 	  <groupId>com.ichaoj.ycl</groupId>
 	  <artifactId>ycl-client</artifactId>
