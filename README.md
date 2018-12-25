@@ -318,7 +318,7 @@
 |sealType   |String   |否   |   |签章类型， 公章（official）or 私章(personal)  |
 |signatoryAuto   |String   |否   |   |是否自动签约 自动（YES） or 手动（NO）   |
 |signatoryUserType   |String   |否   |   |签约用户类型 个人（PERSONAL） or 企业（ENTERPRISE）   |
-|signatoryTime   |String   |否   |   |签约时间   |
+|signatoryTime   |String   |否   |   |签约时间 (格式：2018-12-25 14:39   |
 |group   |GroupsEnum   |否   |   |签约方   |
 |phone   |String   |是   |   |签约人手机号码（手机邮箱至少选择其中一个）   |
 |email   |String   |是   |   |签约人手机邮箱 （手机邮箱至少选择其中一个）  |
