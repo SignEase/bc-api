@@ -164,6 +164,7 @@
 - **自动签约：**为签约人指定**自动签约**时，将不会发送签约邀请链接。系统会自动为该签约人完成签约加上签约印章。
 - **手动签约: **为签约人指定**手动签约**时，系统将会发送一条签约邀请到该签约人。如果签约人存邮箱将通过邮件的方式发送，如果存在手机将通过短信进行发送。用户需根据签约链接指引完成签约。
 
+realNameMask : 在SignatoryApiOrder 类中配置是全局的，也可以在 YclSignatory 类为每个签约人单独配置
 
 **参数：(SignatoryApiOrder.java)**
 
@@ -172,7 +173,8 @@
 |pdfFileBase64    |String     |否 |  | 文件内容    （格式要求为: 文件名 + @ + 文件的Base64编码）        |
 |yclDataStore |YclDataStore |否 |    |   合同基本信息  |
 |yclSignatory |YclSignatory |否   |    |   签约人信息    |
-
+|realNameMask |Boolean |是   |    |   true:为该笔电子签约所有签约人姓名打掩码 为true时仅显示姓，其余的 * 号代替   |
+|certNoMast   |Boolean   |是   |   |true:为该笔电子签约所有签约人证件号打掩码，签章证件号是否掩码 （为true时后四位用 * 号代替）|
 
  **备注**
 
@@ -324,11 +326,14 @@
 |email   |String   |是   |   |签约人手机邮箱 （手机邮箱至少选择其中一个）  |
 |certNo   |String   |是   |   |签约方证件号   |
 |certType   |String   |是   |   |签约方证件类型（填了证件号就必选填证件类型）("ID","身份证")("INSTITUTION_CODE","组织机构代码证")BUSINESS_LICENCE("BUSINESS_LICENCE","营业执照")   |
-|signatureX   |String   |是   |   |签章x坐标 （不填写时系统自动生成）  |
-|signatureY   |Double   |是   |   |签章y坐标 （不填写时系统自动生成）  |
-|signaturePage   |Integer   |是   |   |签章页 （不填时默认最后一页）  |
-|keywords   |String   |否   |   |签章定位关键词 |
-|sealPurpose   |String   |否   |   |章的用途(签章类型为企业是必填) |
+|signatureX   |String   |是   |   |签章x坐标  |
+|signatureY   |Double   |是   |   |签章y坐标 |
+|signaturePage   |Integer   |是   |   |签章页  |
+|keywords   |String   |是   |   |签章定位关键词（与x.y 必须二选一） |
+|sealPurpose   |String   |是   |   |章的用途(签章类型为企业是必填) |
+|realNameMask   |Boolean   |是   |   |签章姓名是否掩码 （为true时仅显示姓，其余的 * 号代替）|
+|certNoMast   |Boolean   |是   |   |签章证件号是否掩码 （为true时后四位用 * 号代替）|
+|sealSn   |String   |是   |   |章编号（防伪码）|
 
 #### 接口四 文件下载
 **简要描述：**
