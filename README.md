@@ -15,7 +15,7 @@
 	<dependency>
 	  <groupId>com.ichaoj.ycl</groupId>
 	  <artifactId>ycl-client</artifactId>
-	  <version>0.1.1</version>
+	  <version>0.1.2</version>
 	</dependency>
 ```
 
@@ -164,6 +164,7 @@
 - **自动签约：**为签约人指定**自动签约**时，将不会发送签约邀请链接。系统会自动为该签约人完成签约加上签约印章。
 - **手动签约: **为签约人指定**手动签约**时，系统将会发送一条签约邀请到该签约人。如果签约人存邮箱将通过邮件的方式发送，如果存在手机将通过短信进行发送。用户需根据签约链接指引完成签约。
 
+realNameMask : 在SignatoryApiOrder 类中配置是全局的，也可以在 YclSignatory 类为每个签约人单独配置
 
 **参数：(SignatoryApiOrder.java)**
 
@@ -172,7 +173,8 @@
 |pdfFileBase64    |String     |否 |  | 文件内容    （格式要求为: 文件名 + @ + 文件的Base64编码）        |
 |yclDataStore |YclDataStore |否 |    |   合同基本信息  |
 |yclSignatory |YclSignatory |否   |    |   签约人信息    |
-
+|realNameMask |Boolean |是   |    |   true:为该笔电子签约所有签约人姓名打掩码 为true时仅显示姓，其余的 * 号代替   |
+|certNoMast   |Boolean   |是   |   |true:为该笔电子签约所有签约人证件号打掩码，签章证件号是否掩码 （为true时后四位用 * 号代替）|
 
  **备注**
 
@@ -233,29 +235,30 @@
 		YclSignatory yclSignatory1 = new YclSignatory();
 		// 签约人姓名 必填
 		yclSignatory1.setRealName("姓名");
+		yclSignatory1.setSealPurpose("合同专用章");
 		// 签章类型 必填
-		yclSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
+		yclSignatory1.setSealType(SealTypeEnum.OFFICIAL.getCode());
 		// 是否自动签约  必填
-		yclSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
+		yclSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
 		// 签约用户类型 必填
 		yclSignatory1.setSignatoryUserType(PERSONAL.getCode());
 		// 签约时间 必填
 		yclSignatory1.setSignatoryTime("2018-2-28");
 		//签约方 必填
 		yclSignatory1.setGroup(GroupsEnum.PARTY_A);
+		yclSignatory1.setGroupName("甲");
 
 		//签约人手机邮箱 选填
-		yclSignatory1.setEmail("1111111@qq.com");
-		//签约方证件号 选填
-		yclSignatory1.setCertNo("4423355343544353ssss54");
+		yclSignatory1.setEmail("zjq115097475@qq.com");
 		//填了证件号就必选填证件类型
-		yclSignatory1.setCertType(CertTypeEnum.UNIFIED_SOCIAL_CREDIT_CODE.getCode());
+		yclSignatory1.setCertType(CertTypeEnum.INSTITUTION_CODE.getCode());
 		//签章x坐标 （不填写时系统自动生成）
 		yclSignatory1.setSignatureX(100.0);
 		//签章y坐标 （不填写时系统自动生成）
 		yclSignatory1.setSignatureY(100.0);
 		//签章页 （不填时默认最后一页）
 		yclSignatory1.setSignaturePage(1);
+		yclSignatory1.setKeywords("开户银行");
 
 
 		//乙方
@@ -317,17 +320,20 @@
 |sealType   |String   |否   |   |签章类型， 公章（official）or 私章(personal)  |
 |signatoryAuto   |String   |否   |   |是否自动签约 自动（YES） or 手动（NO）   |
 |signatoryUserType   |String   |否   |   |签约用户类型 个人（PERSONAL） or 企业（ENTERPRISE）   |
-|signatoryTime   |String   |否   |   |签约时间   |
+|signatoryTime   |String   |否   |   |签约时间 (格式：2018-12-25 14:39   |
 |group   |GroupsEnum   |否   |   |签约方   |
 |phone   |String   |是   |   |签约人手机号码（手机邮箱至少选择其中一个）   |
 |email   |String   |是   |   |签约人手机邮箱 （手机邮箱至少选择其中一个）  |
 |certNo   |String   |是   |   |签约方证件号   |
 |certType   |String   |是   |   |签约方证件类型（填了证件号就必选填证件类型）("ID","身份证")("INSTITUTION_CODE","组织机构代码证")BUSINESS_LICENCE("BUSINESS_LICENCE","营业执照")   |
-|signatureX   |String   |是   |   |签章x坐标 （不填写时系统自动生成）  |
-|signatureY   |Double   |是   |   |签章y坐标 （不填写时系统自动生成）  |
-|signaturePage   |Integer   |是   |   |签章页 （不填时默认最后一页）  |
-|keywords   |String   |否   |   |签章定位关键词 |
-|sealPurpose   |String   |否   |   |章的用图(签章类型为企业是必填) |
+|signatureX   |String   |是   |   |签章x坐标  |
+|signatureY   |Double   |是   |   |签章y坐标 |
+|signaturePage   |Integer   |是   |   |签章页  |
+|keywords   |String   |是   |   |签章定位关键词（与x.y 必须二选一） |
+|sealPurpose   |String   |是   |   |章的用途(签章类型为企业是必填) |
+|realNameMask   |Boolean   |是   |   |签章姓名是否掩码 （为true时仅显示姓，其余的 * 号代替）|
+|certNoMast   |Boolean   |是   |   |签章证件号是否掩码 （为true时后四位用 * 号代替）|
+|sealSn   |String   |是   |   |章编号（防伪码）|
 
 #### 接口四 文件下载
 **简要描述：**
