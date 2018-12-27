@@ -95,6 +95,12 @@ public class YclClient {
 		
 		for(int i = 0; i < order.getYclSignatoryList().size(); i++){
 
+			if(order.getRealNameMask() != null){
+				order.getYclSignatoryList().get(i).setRealNameMask(order.getRealNameMask());
+			}
+			if(order.getCertNoMask() != null){
+				order.getYclSignatoryList().get(i).setCertNoMask(order.getCertNoMask());
+			}
 		    // 设置必填参数
             params.put("yclSignatoryList["+i+"].realName", order.getYclSignatoryList().get(i).getRealName());
             params.put("yclSignatoryList["+i+"].sealType", order.getYclSignatoryList().get(i).getSealType());
@@ -134,6 +140,17 @@ public class YclClient {
 				params.put("yclSignatoryList["+i+"].sealPurpose", order.getYclSignatoryList().get(i).getSealPurpose());
 			}
 
+			if(order.getYclSignatoryList().get(i).getRealNameMask() != null){
+				params.put("yclSignatoryList["+i+"].realNameMask", order.getYclSignatoryList().get(i).getRealNameMask()+"");
+			}
+
+			if(order.getYclSignatoryList().get(i).getCertNoMask() != null){
+				params.put("yclSignatoryList["+i+"].certNoMask", order.getYclSignatoryList().get(i).getCertNoMask()+"");
+			}
+
+			if(order.getYclSignatoryList().get(i).getSealSn() != null){
+				params.put("yclSignatoryList["+i+"].sealSn", order.getYclSignatoryList().get(i).getSealSn());
+			}
 		}
 		
 		String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);

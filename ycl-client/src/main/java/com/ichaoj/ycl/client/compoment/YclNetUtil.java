@@ -441,7 +441,6 @@ public class YclNetUtil {
 
     private static byte[] getStreamAsByteArray(HttpURLConnection conn) throws IOException{
         int responseCode = conn.getResponseCode();
-        System.out.println("responseCode = " + responseCode);
 
         InputStream errorStream = conn.getErrorStream();
         if(errorStream == null){

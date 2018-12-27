@@ -141,6 +141,20 @@ public class YclSignatory implements Serializable {
 	 */
 	private String sealPurpose;
 
+	/**
+	 * 签章真实姓名打码
+	 */
+	private Boolean realNameMask;
+
+	/**
+	 * 签章证件号码打码
+	 */
+	private Boolean certNoMask;
+	/**
+	 * 章编号（防伪码）
+	 */
+	private String sealSn;
+
 
 	public String getCertNo() {
 		return certNo;
@@ -562,6 +576,30 @@ public class YclSignatory implements Serializable {
 
 	public void setSealPurpose(String sealPurpose) {
 		this.sealPurpose = sealPurpose;
+	}
+
+	public Boolean getRealNameMask() {
+		return realNameMask;
+	}
+
+	public void setRealNameMask(Boolean realNameMask) {
+		this.realNameMask = realNameMask;
+	}
+
+	public String getSealSn() {
+		return sealSn;
+	}
+
+	public void setSealSn(String sealSn) {
+		this.sealSn = sealSn;
+	}
+
+	public Boolean getCertNoMask() {
+		return certNoMask;
+	}
+
+	public void setCertNoMask(Boolean certNoMask) {
+		this.certNoMask = certNoMask;
 	}
 
 	/**

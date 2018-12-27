@@ -20,8 +20,17 @@ public class SignatoryApiOrder {
 	private List<YclSignatory> yclSignatoryList = new ArrayList<>();
 	
 	private String pdfFileBase64;
-	
-	
+
+	/**
+	 * 所有签章签约人真实姓名打码
+	 */
+	private Boolean realNameMask;
+
+	/**
+	 *  所有签章签约人证件号码打码
+	 */
+	private Boolean certNoMask;
+
 	public String getFileName(){
 		return pattern.matcher(this.pdfFileBase64).group(0);
 	}
@@ -90,9 +99,21 @@ public class SignatoryApiOrder {
 		this.pdfFileBase64 = pdfFileBase64;
 	}
 
+	public Boolean getRealNameMask() {
+		return realNameMask;
+	}
 
+	public void setRealNameMask(Boolean realNameMask) {
+		this.realNameMask = realNameMask;
+	}
 
+	public Boolean getCertNoMask() {
+		return certNoMask;
+	}
 
+	public void setCertNoMask(Boolean certNoMask) {
+		this.certNoMask = certNoMask;
+	}
 
 	/**
 	 * 验证签章位置 关键字 与 坐标（x,y,pageNo） 必须有一个不能为空
