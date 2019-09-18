@@ -7,6 +7,8 @@ public enum YclServiceEnum {
 	/***/
 	PING("/api/ping.json", "连接测试服务"),
 	STORE("/api/filePreservation.json", "保全服务"),
+	/** OCSV: on-chain storage & validation **/
+	OCSV("/api/ocsv.json", "上链存证服务"),
 	SIGNATORY("/api/signatory.json", "签章服务"),
 	FILE_DOWNLOAD("/api/fileNotary.json", "文件下载");
 

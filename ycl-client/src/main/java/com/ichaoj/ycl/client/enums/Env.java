@@ -2,10 +2,10 @@ package com.ichaoj.ycl.client.enums;
 
 public enum Env {
 
-	ONLINE("https://yuncunlian.com", "线上环境"),
-	TEST("http://mock.beancloud.top", "测试环境"),
-	LOCAL_TEST("http://192.169.2.207:8086", "本地测试环境"),
-	LOCAL("http://127.0.0.1:8081", "本地环境");
+	ONLINE("https://sxqian.com", "线上环境"),
+	TEST("https://mock.sxqian.com", "测试环境"),
+	LOCAL_TEST("http://192.169.2.207:8086", "本地联调环境"),
+	LOCAL("http://127.0.0.1:7878", "本地环境");
 
 	private String code;
 	private String message;

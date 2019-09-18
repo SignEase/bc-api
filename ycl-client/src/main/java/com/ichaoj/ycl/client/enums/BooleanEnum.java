@@ -7,22 +7,7 @@ package com.ichaoj.ycl.client.enums;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 
- * @Filename BooleanEnum.java
- * 
- * @Description
- * 
- * @Version 1.0
- * 
- * @Author qichunhai
- * 
- * @Email qchunhai@yiji.com
- * 
- * @History <li>Author: qichunhai</li> <li>Date: 2014-4-3</li> <li>Version: 1.0</li>
- * <li>Content: create</li>
- * 
- */
+
 public enum BooleanEnum {
 	
 	/** NO */

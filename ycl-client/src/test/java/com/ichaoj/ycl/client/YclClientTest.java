@@ -26,7 +26,7 @@ public class YclClientTest {
 	
 	@BeforeClass
 	public static void init(){
-		yclClient = new YclClient("您的appKey","您的appSecret",Env.TEST);
+		yclClient = new YclClient("20180228102210355830","7b03d498836943d3ab0fac2abcf29365",Env.TEST);
 
 	}
 
