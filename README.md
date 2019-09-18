@@ -22,11 +22,10 @@
 			</releases>
 		</repository>
 	</repositories>
-	
 	<dependency>
 	  <groupId>com.ichaoj.ycl</groupId>
 	  <artifactId>ycl-client</artifactId>
-	  <version>0.1.1</version>
+	  <version>0.1.3</version>
 	</dependency>
 ```
 
@@ -175,6 +174,8 @@
 - **自动签约：**为签约人指定**自动签约**时，将不会发送签约邀请链接。系统会自动为该签约人完成签约加上签约印章。
 - **手动签约: **为签约人指定**手动签约**时，系统将会发送一条签约邀请到该签约人。如果签约人存邮箱将通过邮件的方式发送，如果存在手机将通过短信进行发送。用户需根据签约链接指引完成签约。
 
+realNameMask : 在SignatoryApiOrder 类中配置是全局的，也可以在 YclSignatory 类为每个签约人单独配置
+certNoMask  : 在SignatoryApiOrder 类中配置是全局的，也可以在 YclSignatory 类为每个签约人单独配置
 
 **参数：(SignatoryApiOrder.java)**
 
@@ -183,7 +184,8 @@
 |pdfFileBase64    |String     |否 |  | 文件内容    （格式要求为: 文件名 + @ + 文件的Base64编码）        |
 |yclDataStore |YclDataStore |否 |    |   合同基本信息  |
 |yclSignatory |YclSignatory |否   |    |   签约人信息    |
-
+|realNameMask |Boolean |是   |    |   true:为该笔电子签约所有签约人姓名打掩码 为true时仅显示姓，其余的 * 号代替   |
+|certNoMask   |Boolean   |是   |   |true:为该笔电子签约所有签约人证件号打掩码，签章证件号是否掩码 （为true时后四位用 * 号代替）|
 
  **备注**
 
@@ -226,7 +228,7 @@
 		YclDataStore yclDataStore = new YclDataStore();
 		try {
 
-			String filePath = "E:\\ichaoj\\innerCA\\signPDF\\demo9.pdf";
+			String filePath = "C:\\Users\\fan\\Desktop\\买卖合同.pdf";
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 			order.setPdfFileBase64("demo8.pdf@"+encoder.encodeBuffer(bytes));
 
@@ -235,39 +237,43 @@
 		}
 		//合同基本信息
 		yclDataStore.setUserBizNumber(BusinessNumberUtil.gainNumber());
-		yclDataStore.setStoreName("《合同名称》");
+		yclDataStore.setStoreName("《合同名称》"+ new Date());
 		yclDataStore.setIsPublic(StoreVisibleEnum.PUBLIC.getCode());
-        yclDataStore.setTransAbs("这是存证说明");
+        	yclDataStore.setTransAbs("这是存证说明"+ new Date());
 		order.setYclDataStore(yclDataStore);
+		// 真实姓名是否打掩码
+		order.setRealNameMask(true);
+		// 证件号码是否掩码
+		order.setCertNoMask(true);
 
 		//甲方
 		YclSignatory yclSignatory1 = new YclSignatory();
 		// 签约人姓名 必填
-		yclSignatory1.setRealName("姓名");
+		yclSignatory1.setRealName("我是甲方");
+		//章的用途
+		yclSignatory1.setSealPurpose("合同专用章");
 		// 签章类型 必填
-		yclSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
+		yclSignatory1.setSealType(SealTypeEnum.OFFICIAL.getCode());
 		// 是否自动签约  必填
-		yclSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
+		yclSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
 		// 签约用户类型 必填
-		yclSignatory1.setSignatoryUserType(PERSONAL.getCode());
+		yclSignatory1.setSignatoryUserType(ENTERPRISE.getCode());
 		// 签约时间 必填
 		yclSignatory1.setSignatoryTime("2018-2-28");
 		//签约方 必填
 		yclSignatory1.setGroup(GroupsEnum.PARTY_A);
-
+		//签约方名称  必填
+		yclSignatory1.setGroupName("甲");
+		// 章的防伪码
+        	yclSignatory1.setSealSn("fangweima2334");
 		//签约人手机邮箱 选填
-		yclSignatory1.setEmail("1111111@qq.com");
+		yclSignatory1.setEmail("fsfxxxx@qq.com");
 		//签约方证件号 选填
-		yclSignatory1.setCertNo("4423355343544353ssss54");
+		yclSignatory1.setCertNo("24324342342323234243");
 		//填了证件号就必选填证件类型
-		yclSignatory1.setCertType(CertTypeEnum.UNIFIED_SOCIAL_CREDIT_CODE.getCode());
-		//签章x坐标 （不填写时系统自动生成）
-		yclSignatory1.setSignatureX(100.0);
-		//签章y坐标 （不填写时系统自动生成）
-		yclSignatory1.setSignatureY(100.0);
-		//签章页 （不填时默认最后一页）
-		yclSignatory1.setSignaturePage(1);
-
+		yclSignatory1.setCertType(CertTypeEnum.INSTITUTION_CODE.getCode());
+		//签章定位关键词
+		yclSignatory1.setKeywords("开户银行");
 
 		//乙方
 		YclSignatory yclSignatory2 = new YclSignatory();
@@ -276,25 +282,27 @@
 		// 签章类型 必填
 		yclSignatory2.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		yclSignatory2.setSignatoryAuto(BooleanEnum.NO.getCode());
+		yclSignatory2.setSignatoryAuto(BooleanEnum.YES.getCode());
 		// 签约用户类型 必填
 		yclSignatory2.setSignatoryUserType(PERSONAL.getCode());
 		// 签约时间 必填
-		yclSignatory2.setSignatoryTime("2018-2-28");
+		yclSignatory2.setSignatoryTime("2018-12-25 14:39");
 		//签约方 必填
 		yclSignatory2.setGroup(GroupsEnum.PARTY_B);
+		//签约方名称
+		yclSignatory2.setGroupName("乙方");
 
 		//签约人手机邮箱 选填
-		yclSignatory2.setEmail("2222222@qq.com");
+		yclSignatory2.setPhone("15123164744");
 		//签约方证件号 选填
 		yclSignatory2.setCertNo("4355343544353ssss54");
 		//填了证件号就必选填证件类型
 		yclSignatory2.setCertType(CertTypeEnum.IDENTITY_CARD.getCode());
-		//签章x坐标 （不填写时系统自动生成）
+		//签章x坐标
 		yclSignatory2.setSignatureX(100.0);
-		//签章y坐标 （不填写时系统自动生成）
+		//签章y坐标
 		yclSignatory2.setSignatureY(100.0);
-		//签章页 （不填时默认最后一页）
+		//签章页
 		yclSignatory2.setSignaturePage(1);
 
 
@@ -302,9 +310,11 @@
 		yclSignatorylist.add(yclSignatory1);
 		yclSignatorylist.add(yclSignatory2);
 
+
 		StoreResult result = yclClient.signatory(order);
 		System.out.println(result.toString());
 	}
+	
 
 
 #### 通用对象属性
@@ -328,16 +338,20 @@
 |sealType   |String   |否   |   |签章类型， 公章（official）or 私章(personal)  |
 |signatoryAuto   |String   |否   |   |是否自动签约 自动（YES） or 手动（NO）   |
 |signatoryUserType   |String   |否   |   |签约用户类型 个人（PERSONAL） or 企业（ENTERPRISE）   |
-|signatoryTime   |String   |否   |   |签约时间   |
+|signatoryTime   |String   |否   |   |签约时间 (格式：2018-12-25 14:39   |
 |group   |GroupsEnum   |否   |   |签约方   |
 |phone   |String   |是   |   |签约人手机号码（手机邮箱至少选择其中一个）   |
 |email   |String   |是   |   |签约人手机邮箱 （手机邮箱至少选择其中一个）  |
 |certNo   |String   |是   |   |签约方证件号   |
 |certType   |String   |是   |   |签约方证件类型（填了证件号就必选填证件类型）("ID","身份证")("INSTITUTION_CODE","组织机构代码证")BUSINESS_LICENCE("BUSINESS_LICENCE","营业执照")   |
-|signatureX   |String   |是   |   |签章x坐标 （不填写时系统自动生成）  |
-|signatureY   |Double   |是   |   |签章y坐标 （不填写时系统自动生成）  |
-|signaturePage   |Integer   |是   |   |签章页 （不填时默认最后一页）  |
-|keywords   |String   |否   |   |签章定位关键词 |
+|signatureX   |String   |是   |   |签章x坐标  |
+|signatureY   |Double   |是   |   |签章y坐标 |
+|signaturePage   |Integer   |是   |   |签章页  |
+|keywords   |String   |是   |   |签章定位关键词（与x.y 必须二选一） |
+|sealPurpose   |String   |是   |   |章的用途(签章类型为企业是必填) |
+|realNameMask   |Boolean   |是   |   |签章姓名是否掩码 （为true时仅显示姓，其余的 * 号代替）|
+|certNoMask   |Boolean   |是   |   |签章证件号是否掩码 （为true时后四位用 * 号代替）|
+|sealSn   |String   |是   |   |章编号（防伪码）|
 
 #### 接口四 文件下载
 **简要描述：**

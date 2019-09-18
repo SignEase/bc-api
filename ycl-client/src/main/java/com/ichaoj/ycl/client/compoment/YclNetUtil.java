@@ -1,11 +1,6 @@
 package com.ichaoj.ycl.client.compoment;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -39,7 +34,7 @@ public class YclNetUtil {
 
     private static SSLContext       ctx             = null;
 
-    private static HostnameVerifier verifier        = null;
+    private static HostnameVerifier verifier;
 
     private static SSLSocketFactory socketFactory   = null;
 
@@ -167,105 +162,6 @@ public class YclNetUtil {
         return rsp;
     }
 
-//    /**
-//     * 执行带文件上传的HTTP POST请求。
-//     *
-//     * @param url 请求地址
-//     * @param textParams 文本请求参数
-//     * @param fileParams 文件请求参数
-//     * @return 响应字符串
-//     * @throws IOException
-//     */
-//    public static String doPost(String url, Map<String, String> params,
-//                                Map<String, FileItem> fileParams, int connectTimeout,
-//                                int readTimeout) throws IOException {
-//        if (fileParams == null || fileParams.isEmpty()) {
-//            return doPost(url, params, DEFAULT_CHARSET, connectTimeout, readTimeout);
-//        } else {
-//            return doPost(url, params, fileParams, DEFAULT_CHARSET, connectTimeout, readTimeout);
-//        }
-//    }
-
-//    /**
-//     * 执行带文件上传的HTTP POST请求。
-//     *
-//     * @param url 请求地址
-//     * @param textParams 文本请求参数
-//     * @param fileParams 文件请求参数
-//     * @param charset 字符集，如UTF-8, GBK, GB2312
-//     * @return 响应字符串
-//     * @throws IOException
-//     */
-//    public static String doPost(String url, Map<String, String> params,
-//                                Map<String, FileItem> fileParams, String charset,
-//                                int connectTimeout, int readTimeout) throws IOException {
-//        if (fileParams == null || fileParams.isEmpty()) {
-//            return doPost(url, params, charset, connectTimeout, readTimeout);
-//        }
-//
-//        String boundary = System.currentTimeMillis() + ""; // 随机分隔线
-//        HttpURLConnection conn = null;
-//        OutputStream out = null;
-//        String rsp = null;
-//        try {
-//            try {
-//                String ctype = "multipart/form-data;boundary=" + boundary + ";charset=" + charset;
-//                conn = getConnection(new URL(url), METHOD_POST, ctype);
-//                conn.setConnectTimeout(connectTimeout);
-//                conn.setReadTimeout(readTimeout);
-//            } catch (IOException e) {
-//                Map<String, String> map = getParamsFromUrl(url);
-//                AlipayLogger.logCommError(e, url, map.get("app_key"), map.get("method"), params);
-//                throw e;
-//            }
-//
-//            try {
-//                out = conn.getOutputStream();
-//
-//                byte[] entryBoundaryBytes = ("\r\n--" + boundary + "\r\n").getBytes(charset);
-//
-//                // 组装文本请求参数
-//                Set<Entry<String, String>> textEntrySet = params.entrySet();
-//                for (Entry<String, String> textEntry : textEntrySet) {
-//                    byte[] textBytes = getTextEntry(textEntry.getKey(), textEntry.getValue(),
-//                            charset);
-//                    out.write(entryBoundaryBytes);
-//                    out.write(textBytes);
-//                }
-//
-//                // 组装文件请求参数
-//                Set<Entry<String, FileItem>> fileEntrySet = fileParams.entrySet();
-//                for (Entry<String, FileItem> fileEntry : fileEntrySet) {
-//                    FileItem fileItem = fileEntry.getValue();
-//                    byte[] fileBytes = getFileEntry(fileEntry.getKey(), fileItem.getFileName(),
-//                            fileItem.getMimeType(), charset);
-//                    out.write(entryBoundaryBytes);
-//                    out.write(fileBytes);
-//                    out.write(fileItem.getContent());
-//                }
-//
-//                // 添加请求结束标志
-//                byte[] endBoundaryBytes = ("\r\n--" + boundary + "--\r\n").getBytes(charset);
-//                out.write(endBoundaryBytes);
-//                rsp = getResponseAsString(conn);
-//            } catch (IOException e) {
-//                Map<String, String> map = getParamsFromUrl(url);
-//                AlipayLogger.logCommError(e, conn, map.get("app_key"), map.get("method"), params);
-//                throw e;
-//            }
-//
-//        } finally {
-//            if (out != null) {
-//                out.close();
-//            }
-//            if (conn != null) {
-//                conn.disconnect();
-//            }
-//        }
-//
-//        return rsp;
-//    }
-
     private static byte[] getTextEntry(String fieldName, String fieldValue,
                                        String charset) throws IOException {
         StringBuilder entry = new StringBuilder();
@@ -313,7 +209,7 @@ public class YclNetUtil {
     public static String doGet(String url, Map<String, String> params,
                                String charset) throws IOException {
         HttpURLConnection conn = null;
-        String rsp = null;
+        String rsp;
 
         try {
             String ctype = "application/x-www-form-urlencoded;charset=" + charset;
@@ -343,9 +239,24 @@ public class YclNetUtil {
         return rsp;
     }
 
+    public static byte[] doGetDownLoad(String url, Map<String, String> params) throws IOException {
+        String ctype = "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET;
+        String query = buildQuery(params, DEFAULT_CHARSET);
+        HttpURLConnection conn =  getConnection(buildGetUrl(url, query), METHOD_GET, ctype);
+
+
+        try {
+            return getStreamAsByteArray(conn);
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+    }
     private static HttpURLConnection getConnection(URL url, String method,
                                                    String ctype) throws IOException {
-        HttpURLConnection conn = null;
+        HttpURLConnection conn;
         if ("https".equals(url.getProtocol())) {
             HttpsURLConnection connHttps = (HttpsURLConnection) url.openConnection();
             connHttps.setSSLSocketFactory(socketFactory);
@@ -414,7 +325,7 @@ public class YclNetUtil {
         return query.toString();
     }
 
-    protected static String getResponseAsString(HttpURLConnection conn) throws IOException {
+    protected static String  getResponseAsString(HttpURLConnection conn) throws IOException {
         String charset = getResponseCharset(conn.getContentType());
         InputStream es = conn.getErrorStream();
         if (es == null) {
@@ -429,13 +340,48 @@ public class YclNetUtil {
         }
     }
 
+    private static byte[] getStreamAsByteArray(HttpURLConnection conn) throws IOException{
+        int responseCode = conn.getResponseCode();
+
+        InputStream errorStream = conn.getErrorStream();
+        if(errorStream == null){
+            return getStreamAsByteArray(conn.getInputStream());
+        } else {
+            String charset = getResponseCharset(conn.getContentType());
+            String msg = getStreamAsString(errorStream, charset);
+            if (StringUtils.isEmpty(msg)) {
+                throw new IOException(conn.getResponseCode() + ":" + conn.getResponseMessage());
+            } else {
+                throw new IOException(msg);
+            }
+        }
+
+    }
+
+    private static byte[] getStreamAsByteArray(InputStream stream) throws IOException{
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        byte [] bytes = new byte[1024];
+        int index;
+        try {
+            while ( (index = stream.read(bytes)) != -1){
+                byteArrayOutputStream.write(bytes,0,index);
+            }
+            return byteArrayOutputStream.toByteArray();
+        } finally {
+            byteArrayOutputStream.close();
+            stream.close();
+        }
+
+    }
     private static String getStreamAsString(InputStream stream, String charset) throws IOException {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charset));
             StringWriter writer = new StringWriter();
 
             char[] chars = new char[256];
-            int count = 0;
+            int count;
             while ((count = reader.read(chars)) > 0) {
                 writer.write(chars, 0, count);
             }
@@ -497,7 +443,7 @@ public class YclNetUtil {
      * @param charset 字符集
      * @return 反编码后的参数值
      */
-    public static String decode(String value, String charset) {
+    private static String decode(String value, String charset) {
         String result = null;
         if (!StringUtils.isEmpty(value)) {
             try {
@@ -516,7 +462,7 @@ public class YclNetUtil {
      * @param charset 字符集
      * @return 编码后的参数值
      */
-    public static String encode(String value, String charset) {
+    private static String encode(String value, String charset) {
         String result = null;
         if (!StringUtils.isEmpty(value)) {
             try {
@@ -546,13 +492,13 @@ public class YclNetUtil {
      * @return 参数映射
      */
     public static Map<String, String> splitUrlQuery(String query) {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
 
         String[] pairs = query.split("&");
         if (pairs != null && pairs.length > 0) {
             for (String pair : pairs) {
                 String[] param = pair.split("=", 2);
-                if (param != null && param.length == 2) {
+                if (param.length == 2) {
                     result.put(param[0], param[1]);
                 }
             }
@@ -575,8 +521,7 @@ public class YclNetUtil {
         sb.append("<input type=\"submit\" value=\"立即支付\" style=\"display:none\" >\n");
         sb.append("</form>\n");
         sb.append("<script>document.forms[0].submit();</script>");
-        String form = sb.toString();
-        return form;
+        return sb.toString();
     }
 
     private static String buildHiddenFields(Map<String, String> parameters) {
@@ -593,8 +538,7 @@ public class YclNetUtil {
             }
             sb.append(buildHiddenField(key, value));
         }
-        String result = sb.toString();
-        return result;
+        return sb.toString();
     }
 
     private static String buildHiddenField(String key, String value) {

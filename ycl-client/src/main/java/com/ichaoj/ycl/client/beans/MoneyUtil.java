@@ -2,22 +2,7 @@ package com.ichaoj.ycl.client.beans;
 
 import java.text.DecimalFormat;
 
-/**
- * 
- * @Filename MoneyUtil.java
- * 
- * @Description
- * 
- * @Version 1.0
- * 
- * @Author peigen
- * 
- * @Email peigen@yiji.com
- * 
- * @History <li>Author: peigen</li> <li>Date: 2012-1-19</li> <li>Version: 1.0</li>
- *          <li>Content: create</li>
- * 
- */
+
 public class MoneyUtil {
 	
 	private static String[] CH = { "", "", "拾", "佰", "仟", "万", "", "", "", "亿", "", "", "", "兆" };
