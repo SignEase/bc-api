@@ -1,14 +1,13 @@
 package com.ichaoj.ycl.client.beans;
 
+import com.ichaoj.ycl.client.util.Assert;
+import com.yiji.openapi.tool.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import com.ichaoj.ycl.client.enums.SealTypeEnum;
-import com.ichaoj.ycl.client.util.Assert;
-import com.yiji.openapi.tool.util.StringUtils;
 
 
 public class SignatoryApiOrder {
@@ -161,6 +160,5 @@ public class SignatoryApiOrder {
 			}
 		}
 		throw new IllegalArgumentException("签约方至少需要" + minGroupNum + "方");
-
 	}
 }

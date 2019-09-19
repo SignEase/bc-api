@@ -1,24 +1,25 @@
 package com.ichaoj.ycl.client;
 
 
-import java.io.FileNotFoundException;
+import com.ichaoj.ycl.client.beans.*;
+import com.ichaoj.ycl.client.compoment.BusinessNumberUtil;
+import com.ichaoj.ycl.client.compoment.ResultBase;
+import com.ichaoj.ycl.client.compoment.ResultInfo;
+import com.ichaoj.ycl.client.compoment.StoreResult;
+import com.ichaoj.ycl.client.enums.*;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import sun.misc.BASE64Encoder;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.ichaoj.ycl.client.beans.*;
-import com.ichaoj.ycl.client.compoment.BusinessNumberUtil;
-import com.ichaoj.ycl.client.compoment.ResultBase;
-import com.ichaoj.ycl.client.compoment.StoreResult;
-import com.ichaoj.ycl.client.enums.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import sun.misc.BASE64Encoder;
-
-import static com.ichaoj.ycl.client.enums.SignatoryUserTypeEnum.*;
+import static com.ichaoj.ycl.client.enums.SignatoryUserTypeEnum.PERSONAL;
 
 public class YclClientTest {
 
@@ -26,8 +27,7 @@ public class YclClientTest {
 	
 	@BeforeClass
 	public static void init(){
-		yclClient = new YclClient("20180228102210355830","7b03d498836943d3ab0fac2abcf29365",Env.TEST);
-
+		yclClient = new YclClient("20180228102210355830","7b03d498836943d3ab0fac2abcf29365",Env.LOCAL);
 	}
 
 
@@ -192,17 +192,31 @@ public class YclClientTest {
 	 */
 	@Test
 	public void fileDownloadTest() throws IOException {
-
-
         byte[] fileContent = yclClient.downloadFile("YC0000011586");
         FileOutputStream outputStream = new FileOutputStream("I:\\testdownload2.pdf");
-
-
-       outputStream.write(fileContent);
+        outputStream.write(fileContent);
     }
 
-	public static void main(String[] args) {
-
-
+    /**
+     * @author SOFAS
+     * @description		新的存证接口测试
+     * @date  2019/9/19
+     * @return void
+     **/
+    @Test
+	public void ocsvTest(){
+    	/*创建最外层元素*/
+		ArrayList<Ocsv> ocsvs = new ArrayList<>();
+		Ocsv ocsv = new Ocsv("测试key", "测试value", OcsvTypeEnum.INFOMATION.getCode());
+    	/*创建元素下面的子元素，展示信息下面的图片等*/
+		ArrayList<Ocsv> l1 = new ArrayList<>();
+		Ocsv ocsv1 = new Ocsv("测试子元素key", "测试子元素value", OcsvTypeEnum.INFOMATION.getCode());
+		l1.add(ocsv1);
+		/*将子元素加入到外层元素内*/
+		ocsv.setSubOcsv(l1);
+		ocsvs.add(ocsv);
+		/*发送请求*/
+		ResultInfo aPublic = yclClient.ocsv(ocsvs, 1045516L, StoreVisibleEnum.PUBLIC.getCode(), "回调的地址");
+		System.out.println(aPublic);
 	}
 }

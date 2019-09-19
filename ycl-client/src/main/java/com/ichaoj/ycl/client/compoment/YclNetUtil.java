@@ -1,34 +1,33 @@
 package com.ichaoj.ycl.client.compoment;
 
+import com.ichaoj.ycl.client.beans.OcsvRequst;
+import com.ichaoj.ycl.client.enums.YclServiceEnum;
+import com.yiji.openapi.tool.codec.Hex;
+import com.yiji.openapi.tool.fastjson.JSONObject;
+import com.yiji.openapi.tool.util.DigestUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class YclNetUtil {
 	private static final Log logger = LogFactory.getLog(YclNetUtil.class);
-    private static final String     DEFAULT_CHARSET = "UTF-8";
+    public static final String     DEFAULT_CHARSET = "UTF-8";
     private static final String     METHOD_POST     = "POST";
     private static final String     METHOD_GET      = "GET";
 
@@ -90,8 +89,7 @@ public class YclNetUtil {
      * @return 响应字符串
      * @throws IOException
      */
-    public static String doPost(String url, Map<String, String> params, int connectTimeout,
-                                int readTimeout) throws IOException {
+    public static String doPost(String url, Map<String, String> params, int connectTimeout, int readTimeout) throws IOException {
         return doPost(url, params, DEFAULT_CHARSET, connectTimeout, readTimeout);
     }
 
@@ -104,8 +102,7 @@ public class YclNetUtil {
      * @return 响应字符串
      * @throws IOException
      */
-    public static String doPost(String url, Map<String, String> params, String charset,
-                                int connectTimeout, int readTimeout) throws IOException {
+    public static String doPost(String url, Map<String, String> params, String charset, int connectTimeout, int readTimeout) throws IOException {
         String ctype = "application/x-www-form-urlencoded;charset=" + charset;
         String query = buildQuery(params, charset);
         byte[] content = {};
@@ -124,11 +121,10 @@ public class YclNetUtil {
      * @return 响应字符串
      * @throws IOException
      */
-    public static String doPost(String url, String ctype, byte[] content, int connectTimeout,
-                                int readTimeout) throws IOException {
+    public static String doPost(String url, String ctype, byte[] content, int connectTimeout, int readTimeout) throws IOException {
         HttpURLConnection conn = null;
         OutputStream out = null;
-        String rsp = null;
+        String rsp;
         try {
             try {
                 conn = getConnection(new URL(url), METHOD_POST, ctype);
@@ -148,7 +144,6 @@ public class YclNetUtil {
                 logger.error("服务["+map.get("service")+"]请求失败:"+ e.getMessage());
                 throw e;
             }
-
         } finally {
             if (out != null) {
                 out.close();
@@ -162,8 +157,7 @@ public class YclNetUtil {
         return rsp;
     }
 
-    private static byte[] getTextEntry(String fieldName, String fieldValue,
-                                       String charset) throws IOException {
+    private static byte[] getTextEntry(String fieldName, String fieldValue, String charset) throws IOException {
         StringBuilder entry = new StringBuilder();
         entry.append("Content-Disposition:form-data;name=\"");
         entry.append(fieldName);
@@ -244,7 +238,6 @@ public class YclNetUtil {
         String query = buildQuery(params, DEFAULT_CHARSET);
         HttpURLConnection conn =  getConnection(buildGetUrl(url, query), METHOD_GET, ctype);
 
-
         try {
             return getStreamAsByteArray(conn);
         } finally {
@@ -252,8 +245,24 @@ public class YclNetUtil {
                 conn.disconnect();
             }
         }
-
     }
+
+    public static ResultInfo ocsv(OcsvRequst oq){
+        ResultInfo re;
+        /*添加效验参数*/
+        ocsvDigest(oq);
+        String s = JSONObject.toJSONString(oq);
+        logger.info("请求参数：" + s);
+        try {
+            String s1 = YclNetUtil.doPost(oq.getEnv() + YclServiceEnum.OCSV.getCode(), "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET, s.getBytes(DEFAULT_CHARSET), 60000, 60000);
+            re = JSONObject.parseObject(s1, ResultInfo.class);
+            logger.info("返回参数：" + s1);
+        } catch (IOException e) {
+            re = ResultInfo.error("出现错误，错误信息：" + e.getMessage() + "，错误原因：" + e.getCause() + "，位置：" + Arrays.toString(e.getStackTrace()));
+        }
+        return re;
+    }
+
     private static HttpURLConnection getConnection(URL url, String method,
                                                    String ctype) throws IOException {
         HttpURLConnection conn;
@@ -553,4 +562,15 @@ public class YclNetUtil {
         return sb.toString();
     }
 
+    private static void ocsvDigest(OcsvRequst oq){
+        try {
+            String str = JSONObject.toJSONString(oq);
+            logger.debug("待签名字符串[" + str+"]");
+            MessageDigest md = MessageDigest.getInstance(DigestUtil.DigestALGEnum.MD5.getName());
+            md.update(str.getBytes(DEFAULT_CHARSET));
+            oq.setSign(new String(Hex.encodeHex(md.digest())));
+        } catch (Exception e) {
+            throw new RuntimeException("签名失败", e);
+        }
+    }
 }
