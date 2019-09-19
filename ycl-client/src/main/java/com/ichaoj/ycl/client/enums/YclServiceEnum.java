@@ -10,7 +10,7 @@ public enum YclServiceEnum {
 	/** OCSV: on-chain storage & validation **/
 	OCSV("/api/ocsv.json", "上链存证服务"),
 	SIGNATORY("/api/signatory.json", "签章服务"),
-	FILE_DOWNLOAD("/api/fileNotary.json", "文件下载");
+	FILE_DOWNLOAD("/api/fileNotary.json", "文件下载"),;
 
 	private String code;
 	private String message;
