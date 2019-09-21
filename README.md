@@ -42,7 +42,7 @@ SxqClient sxqClient = new SxqClient("您的appKey","您的appSercret",Env.LOCAL)
 ```
 
 #### 接口一 PING
-*概述*
+***概述***
 
 测试服务器是否连通
 
