@@ -4,8 +4,8 @@
 
 
 ## 接入步骤
-1. 创建省心签账户
-2. 申请`appKey`和`appSecret`
+1. 创建并登录省心签账户，[官网网址](https://sxqian.com)。
+2. 在`账户管理`->`基本资料`里申请并获取`AppKey`和`AppSecret`。
 3. 下载并集成sxq-client到本地工程中。Maven项目可以按照如下pom配置导入。
 4. 参考`com.ichaoj.sxq.client.SxqClientTest`里的用例进行调试。
 
