@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class Ocsv {
-    /**Request
+    /**
      * 对象名称
      */
     private String name;
@@ -39,18 +39,18 @@ public class Ocsv {
         this.type = type;
     }
 
-    public Ocsv(String name, String value, String fileName, String type) {
+    public Ocsv(String name, String value, String type, String fileName) {
         this.name = name;
         this.value = value;
-        this.fileName = fileName;
         this.type = type;
+        this.fileName = fileName;
     }
 
-    public Ocsv(String name, String value, String fileName, String type, List<Ocsv> subOcsv) {
+    public Ocsv(String name, String value, String type, String fileName, List<Ocsv> subOcsv) {
         this.name = name;
         this.value = value;
-        this.fileName = fileName;
         this.type = type;
+        this.fileName = fileName;
         this.subOcsv = subOcsv;
     }
 }
