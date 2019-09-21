@@ -38,18 +38,16 @@ Env.java中可以设置访问不同的环境，在您初始化一个YclClient时
 
 **初始化示例**
 ```
-YclClient yclClient = new YclClient("您的appKey","您的appSercret",Env.LOCAL);
+SxqClient sxqClient = new SxqClient("您的appKey","您的appSercret",Env.LOCAL);
 ```
 
-**为您提供了完整的示例，更多请见 YclClientTest.java 文件**
-
-#### 接口一 测试服务器是否连通
-**概述**
+#### 接口一 PING
+*概述*
 
 测试服务器是否连通
 
 
-**参数**
+*参数*
 无
 
 **返回成功**
