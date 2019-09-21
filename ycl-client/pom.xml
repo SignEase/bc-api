@@ -6,7 +6,7 @@
 	<groupId>com.ichaoj.sxq</groupId>
 	<artifactId>sxq-client</artifactId>
 	<version>0.1.4</version>
-	<name>ycl-client</name>
+	<name>sxq-client</name>
   	<url>http://maven.apache.org</url>
  	<properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,6 +36,12 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>1.7.25</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.20</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
