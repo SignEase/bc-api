@@ -47,7 +47,6 @@ public class OcsvRequst {
         this.env = env;
         this.storeId = storeId;
         this.data = data;
-        this.sign = sign;
         this.isPublic = isPublic;
         this.callBackUrl = callBackUrl;
     }

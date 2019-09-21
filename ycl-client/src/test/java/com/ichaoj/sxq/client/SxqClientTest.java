@@ -7,6 +7,7 @@ import com.ichaoj.sxq.client.compoment.ResultBase;
 import com.ichaoj.sxq.client.compoment.StoreResult;
 import com.ichaoj.sxq.client.enums.*;
 import com.ichaoj.sxq.client.compoment.ResultInfo;
+import com.yiji.openapi.tool.fastjson.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import sun.misc.BASE64Encoder;
@@ -203,6 +204,8 @@ public class SxqClientTest {
      **/
     @Test
 	public void ocsv(){
+    	/*创建实例*/
+		SxqClient sxqClient = new SxqClient("您的appKey","您的appSecret", Env.LOCAL);
     	/*创建最外层元素*/
 		ArrayList<Ocsv> ocsvs = new ArrayList<>();
 		Ocsv ocsv = new Ocsv("测试key", "测试value", OcsvTypeEnum.INFOMATION.getCode());
@@ -216,9 +219,8 @@ public class SxqClientTest {
 		ocsv.setSubOcsv(l1);
 		ocsvs.add(ocsv);
 		/*发送请求*/
-		ResultInfo aPublic = sxqClient.ocsv(ocsvs, null, StoreVisibleEnum.PUBLIC.getCode(), "回调地址");
-		System.out.println(aPublic);
+		ResultInfo resultInfo = sxqClient.ocsv(ocsvs, null, StoreVisibleEnum.PUBLIC.getCode(), "http://127.0.0.1:7878/api/callback.json");
+		String s = JSONObject.toJSONString(resultInfo);
+		System.out.println(s);
 	}
-	
-	//TODO 回调的方法实现
 }

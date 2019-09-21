@@ -185,23 +185,41 @@ com.ichaoj.sxq.client.SxqClientTest#signature
 
 
 ##### *请求参数*
-TODO
-
 |字段|类型|可为空|默认|注释|
 | ------------ | ------------ | ------------ | ------------ | ------------ |
-|storeNo   |String   |否   |   |存储编号   |
+|ocsvs   |List  |否|       |存证内容数组               |
+|storeId |Long  |是|null   |存储编号               |
+|isPublic|String|是|PRIVATE|是否公开               |
+|callback|String|是|null   |司法存证完成后的回调接口|
 
 ##### *请求成功*
-TODO
+```
+{
+"code":200,
+"data":1045544,
+"message":"保全提交成功，正在进行保全",
+"success":true
+}
+```
 
 ##### *请求失败*
-TODO
+```
+{
+"message":"错误原因",
+"success":false
+}
+```
 
 ##### *返回参数说明*
-TODO
+字段      |类型     |空|默认|注释|
+|:----    |:------- |:--- |---|------      |
+|success  |boolean  |否 |    | 是否成功 true 为成功，false 为失败  |
+|message  |String   |否 |    |   描述，失败时为失败原因  |
+|data     |Long     |是 |    |   存证编号  |
+|code     |Integer  |是 |    |   请求码  |
 
 ##### *回调监听*
-TODO
+在设置的回调接收接口，接收参数名为 hashCode 的参数即可获取到上链的豆匣链hash与司法链hash（因上链时间不一样，所以，回调的也不是固定的）
 
 ##### *示例代码*
 

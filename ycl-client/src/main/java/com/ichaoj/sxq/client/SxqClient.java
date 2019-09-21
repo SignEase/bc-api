@@ -9,6 +9,7 @@ import com.ichaoj.sxq.client.compoment.ResultInfo;
 import com.ichaoj.sxq.client.compoment.StoreResult;
 import com.ichaoj.sxq.client.compoment.YclNetUtil;
 import com.ichaoj.sxq.client.enums.Env;
+import com.ichaoj.sxq.client.enums.StoreVisibleEnum;
 import com.ichaoj.sxq.client.enums.SxqServiceEnum;
 import com.yiji.openapi.tool.fastjson.JSONObject;
 import com.yiji.openapi.tool.util.DigestUtil;
@@ -197,14 +198,14 @@ public class SxqClient {
      * @author SOFAS
      * @description         数据存证
      * @date  2019/9/19
-      * @param l            待存证的数据
+      * @param ocsvs            待存证的数据
      * @param storeId       最佳存证信息的存证编号（有存证编号时会对已有的存证主体进行追加操作，没有则会创建一个新的存证主体）
-     * @param p             是否公开（选择公开则被查询时会直接显示所有信息，否则将会对关键信息脱敏）
+     * @param isPublic             是否公开（选择公开则被查询时会直接显示所有信息，否则将会对关键信息脱敏）
      * @param callback      追加存证成功后的回调接口（没有时存证成功后不会自动回调，需要手动到查询小插件查看是否已存证上链成功）
      * @return com.ichaoj.ycl.client.compoment.ResultInfo
      **/
-    public ResultInfo ocsv(List<Ocsv> l, Long storeId, String p, String callback){
-        if (l == null || l.size() == 0){
+    public ResultInfo ocsv(List<Ocsv> ocsvs, Long storeId, String isPublic, String callback){
+        if (ocsvs == null || ocsvs.size() == 0){
             return ResultInfo.error("需要存证的数据不能为空");
         }
         if (this.appKey == null || this.appKey.length() == 0){
@@ -213,8 +214,9 @@ public class SxqClient {
         if (this.appSecret == null || this.appSecret.length() == 0){
             return ResultInfo.error("appSecret不能为空");
         }
-        String s = ocsvDeal(l);
-        return YclNetUtil.ocsv(new OcsvRequst(this.appKey, this.appSecret, env.getCode(), storeId, s, p, callback));
+        isPublic = StoreVisibleEnum.PUBLIC.getCode().equals(isPublic) ? StoreVisibleEnum.PUBLIC.getCode() : StoreVisibleEnum.PRIVATE.getCode();
+        String s = ocsvDeal(ocsvs);
+        return YclNetUtil.ocsv(new OcsvRequst(this.appKey, this.appSecret, env.getCode(), storeId, s, isPublic, callback));
     }
 
     private String ocsvDeal(List<Ocsv> l){
