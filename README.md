@@ -39,6 +39,8 @@ Env.java中可以设置访问不同的环境，在您初始化一个YclClient时
 SxqClient sxqClient = new SxqClient("您的appKey","您的appSercret",Env.LOCAL);
 ```
 
+---
+
 #### 接口一 PING
 
 测试服务器是否连通
@@ -71,6 +73,7 @@ message:"Connection refused: connect"
 
 com.ichaoj.sxq.client.SxqClientTest#ping
 
+---
 
 #### 接口二 文件保全
 
@@ -118,6 +121,8 @@ storeNo:"YC0000000662"
 ##### *示例代码*
 
 com.ichaoj.sxq.client.SxqClientTest#fileStore
+
+---
 
 #### 接口三 电子签约
 
@@ -173,6 +178,7 @@ storeNo:""
 
 com.ichaoj.sxq.client.SxqClientTest#signature
 
+---
 
 #### 接口四 司法存证
 将一组数据和文件进行上链存证。
@@ -201,10 +207,10 @@ TODO
 
 com.ichaoj.sxq.client.SxqClientTest#ocsv
 
+---
 
 #### 接口五 取回文件
 取回电子签约或存证的文件，返回的是数据流。
-
 
 ##### *参数*
 
