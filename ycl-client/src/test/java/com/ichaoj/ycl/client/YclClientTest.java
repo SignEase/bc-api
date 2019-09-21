@@ -27,7 +27,7 @@ public class YclClientTest {
 	
 	@BeforeClass
 	public static void init(){
-		yclClient = new YclClient("20180228102210355830","7b03d498836943d3ab0fac2abcf29365",Env.LOCAL);
+		yclClient = new YclClient("您的appKey","您的appSecret",Env.LOCAL);
 	}
 
 
@@ -211,12 +211,14 @@ public class YclClientTest {
     	/*创建元素下面的子元素，展示信息下面的图片等*/
 		ArrayList<Ocsv> l1 = new ArrayList<>();
 		Ocsv ocsv1 = new Ocsv("测试子元素key", "测试子元素value", OcsvTypeEnum.INFOMATION.getCode());
+		Ocsv ocsv2 = new Ocsv("农事灌溉图", "https://sxqian.oss-cn-hangzhou.aliyuncs.com/app/online/server/images/index/404_icon.png", OcsvTypeEnum.FILE.getCode(), "农事灌溉图");
+		l1.add(ocsv2);
 		l1.add(ocsv1);
 		/*将子元素加入到外层元素内*/
 		ocsv.setSubOcsv(l1);
 		ocsvs.add(ocsv);
 		/*发送请求*/
-		ResultInfo aPublic = yclClient.ocsv(ocsvs, 1045516L, StoreVisibleEnum.PUBLIC.getCode(), "回调的地址");
+		ResultInfo aPublic = yclClient.ocsv(ocsvs, null, StoreVisibleEnum.PUBLIC.getCode(), "回调的地址");
 		System.out.println(aPublic);
 	}
 }
