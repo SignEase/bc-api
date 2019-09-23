@@ -219,7 +219,7 @@ public class SxqClientTest {
 		ocsv.setSubOcsv(l1);
 		ocsvs.add(ocsv);
 		/*发送请求*/
-		ResultInfo resultInfo = sxqClient.ocsv(ocsvs, null, StoreVisibleEnum.PUBLIC.getCode(), "http://127.0.0.1:7878/api/callback.json");
+		ResultInfo resultInfo = sxqClient.ocsv(ocsvs, null, StoreVisibleEnum.PUBLIC.getCode(), "http://127.0.0.1:7878/api/callback.json", "测试存证名称");
 		String s = JSONObject.toJSONString(resultInfo);
 		System.out.println(s);
 	}

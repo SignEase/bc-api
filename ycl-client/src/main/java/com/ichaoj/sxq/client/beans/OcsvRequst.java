@@ -38,10 +38,14 @@ public class OcsvRequst {
      * 回调的接口
      */
     private String callBackUrl;
+    /**
+     * 存证的名称
+     */
+    private String storeName;
 
     public OcsvRequst() { }
 
-    public OcsvRequst(String appKey, String appSecret, String env, Long storeId, String data, String isPublic, String callBackUrl) {
+    public OcsvRequst(String appKey, String appSecret, String env, Long storeId, String data, String isPublic, String callBackUrl, String storeName) {
         this.appKey = appKey;
         this.appSecret = appSecret;
         this.env = env;
@@ -49,5 +53,6 @@ public class OcsvRequst {
         this.data = data;
         this.isPublic = isPublic;
         this.callBackUrl = callBackUrl;
+        this.storeName = storeName;
     }
 }
