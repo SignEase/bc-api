@@ -202,9 +202,10 @@ public class SxqClient {
      * @param storeId       最佳存证信息的存证编号（有存证编号时会对已有的存证主体进行追加操作，没有则会创建一个新的存证主体）
      * @param isPublic             是否公开（选择公开则被查询时会直接显示所有信息，否则将会对关键信息脱敏）
      * @param callback      追加存证成功后的回调接口（没有时存证成功后不会自动回调，需要手动到查询小插件查看是否已存证上链成功）
+     * @param storeName     存证名称
      * @return com.ichaoj.ycl.client.compoment.ResultInfo
      **/
-    public ResultInfo ocsv(List<Ocsv> ocsvs, Long storeId, String isPublic, String callback){
+    public ResultInfo ocsv(List<Ocsv> ocsvs, Long storeId, String isPublic, String callback, String storeName){
         if (ocsvs == null || ocsvs.size() == 0){
             return ResultInfo.error("需要存证的数据不能为空");
         }
@@ -216,7 +217,7 @@ public class SxqClient {
         }
         isPublic = StoreVisibleEnum.PUBLIC.getCode().equals(isPublic) ? StoreVisibleEnum.PUBLIC.getCode() : StoreVisibleEnum.PRIVATE.getCode();
         String s = ocsvDeal(ocsvs);
-        return YclNetUtil.ocsv(new OcsvRequst(this.appKey, this.appSecret, env.getCode(), storeId, s, isPublic, callback));
+        return YclNetUtil.ocsv(new OcsvRequst(this.appKey, this.appSecret, env.getCode(), storeId, s, isPublic, callback, storeName));
     }
 
     private String ocsvDeal(List<Ocsv> l){

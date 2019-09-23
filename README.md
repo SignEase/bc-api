@@ -187,10 +187,11 @@ com.ichaoj.sxq.client.SxqClientTest#signature
 ##### *请求参数*
 |字段|类型|可为空|默认|注释|
 | ------------ | ------------ | ------------ | ------------ | ------------ |
-|ocsvs   |List  |否|       |存证内容数组               |
-|storeId |Long  |是|null   |存储编号               |
-|isPublic|String|是|PRIVATE|是否公开               |
-|callback|String|是|null   |司法存证完成后的回调接口|
+|ocsvs      |List  |否   |       |存证内容数组               |
+|storeId    |Long  |是   |null   |存储编号               |
+|isPublic   |String|是   |PRIVATE|是否公开               |
+|callback   |String|是   |null   |司法存证完成后的回调接口|
+|storeName  |String|是   |null   |设置存证名称（只有当storeId 的值为空的时候，storeName才有效）|
 
 ##### *请求成功*
 ```
