@@ -222,6 +222,14 @@ com.ichaoj.sxq.client.SxqClientTest#signature
 ##### *回调监听*
 在设置的回调接收接口，接收参数名为 hashCode 的参数即可获取到上链的豆匣链hash与司法链hash（因上链时间不一样，所以，回调的也不是固定的）
 
+回调返回参数中data具体参数:
+
+字段      |类型     |空   |注释                                 |
+|:----    |:------- |:--- |------                              |
+|storeId  |Long     |否   | 是否成功 true 为成功，false 为失败  |
+|sepId    |Long     |否   | 描述，失败时为失败原因              |
+|hash     |Long     |是   | 存证编号                           |
+
 ##### *示例代码*
 
 com.ichaoj.sxq.client.SxqClientTest#ocsv
