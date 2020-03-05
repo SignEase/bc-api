@@ -1,6 +1,6 @@
 # 省心签API 接入文档
 
-本文档主要阐述如何对接省心签API。`master`分支基于jdk1.8，`jdkv1.7`基于jdk1.7以上版本可运行。
+本文档主要阐述如何对接省心签API。`master`分支基于jdk1.8，`jdkv1.7`基于jdk1.7以上版本可运行，所有请求均为 POST 请求
 
 
 ## 接入步骤
@@ -39,14 +39,33 @@ Env.java中可以设置访问不同的环境，在您初始化一个YclClient时
 SxqClient sxqClient = new SxqClient("您的appKey","您的appSercret",Env.LOCAL);
 ```
 
+#### 请求地址
+
+|环境          |      HTTPS请求环境地址
+|:----         |:-------   
+|测试环境      |https://sxqian.com   
+|正式环境      |https://mock.sxqian.com
+
 ---
 
 #### 接口一 PING
 
 测试服务器是否连通
 
+##### *具体请求*
+```
+/api/ping.json
+```
+
+##### *请求示例*
+```
+https://mock.sxqian.com/api/ping.json
+```
+
 ##### *参数*
+```
 无
+```
 
 ##### *请求成功*
 
@@ -67,17 +86,30 @@ message:"Connection refused: connect"
 ```
 
 ##### *返回参数说明*
-无
+|字段          |      注释
+|:----         |:-------   
+|success      |是否成功，true为成功，false为失败
+|message      |返回信息
 
 ##### *示例代码*
-
+```
 com.ichaoj.sxq.client.SxqClientTest#ping
-
+```
 ---
 
 #### 接口二 文件保全
 
 对文件进行保全，目前仅支持`Base64`编码格式。
+
+##### *具体请求*
+```
+/api/filePreservation.json
+```
+
+##### *请求示例*
+```
+https://mock.sxqian.com/api/filePreservation.json?fileName=abaac.pdf&sign=704c5227a18151f5ab72edd4739a12fb&isPublic=PUBLIC&appKey=%E6%82%A8%E7%9A%84appKey&appSecret=%E6%82%A8%E7%9A%84appSecret&storeName=mystorae&fileBase64=保全文件的base64
+```
 
 ##### *请求参数*
 
@@ -131,6 +163,60 @@ com.ichaoj.sxq.client.SxqClientTest#fileStore
 - 手动签约: 为签约人指定`手动签约`时，系统将会发送一条签约邀请给该签约人。通过邮件或短信进行发送，用户需根据指引完成签约。
 - 信息脱敏：可以为用户的姓名和身份证号等敏感信息设置是否使用掩码进行脱敏。`realNameMask-姓名掩码`和`certNoMask-身份证掩码`: 在SignatoryApiOrder类中配置是全局的，也可以在YclSignatory类为每个签约人单独配置。
 
+##### *具体请求*
+```
+/api/signatory.json
+```
+
+##### *请求示例*
+```
+https://mock.sxqian.com/api/signatory.json?pdfFileBase64=demo8.pdf%40PDF文件的base64
+&yclSignatoryList[1].certType=ID
+&yclSignatoryList[0].groupChar=a
+&yclSignatoryList[2].certNo=4355343544353
+&yclSignatoryList[1].sealType=PERSONAL
+&sign=e393bc5aa0bca81034ce0a59532ef26f
+&yclDataStore.storeName=%E3%80%8A%E5%90%88%E5%90%8C%E5%90%8D%E7%A7%B0%E3%80%8B
+&yclSignatoryList[1].keywords=%E5%BC%80%E6%88%B7%E9%93%B6%E8%A1%8C
+&yclSignatoryList[1].certNo=4355343544353ssss54
+&yclSignatoryList[2].signatoryTime=2018-2-28
+&yclSignatoryList[0].realName=%E5%A7%93%E5%90%8D
+&yclSignatoryList[1].realName=%E5%A7%93%E5%90%8D
+&yclSignatoryList[1].groupChar=b
+&yclSignatoryList[2].signatoryAuto=YES
+&yclSignatoryList[0].groupName=%E7%94%B2%E6%96%B9
+&yclSignatoryList[0].signaturePage=1
+&yclSignatoryList[1].signatoryTime=2018-2-28
+&yclSignatoryList[1].phone=15123164744
+&yclSignatoryList[1].signatoryUserType=PERSONAL
+&yclDataStore.isPublic=PUBLIC
+&yclSignatoryList[0].sealType=OFFICIAL
+&yclSignatoryList[0].signatoryUserType=PERSONAL
+&yclSignatoryList[1].groupName=%E4%B9%99%E6%96%B9
+&yclSignatoryList[2].signatoryUserType=PERSONAL
+&yclSignatoryList[1].signaturePage=1
+&yclDataStore.userBizNumber=20200305175927990718
+&yclSignatoryList[2].certType=ID
+&yclSignatoryList[2].groupChar=b
+&yclSignatoryList[2].phone=15123164744
+&yclSignatoryList[1].signatoryAuto=YES
+&yclSignatoryList[2].sealType=PERSONAL
+&yclSignatoryList[0].signatoryTime=2018-2-28
+&yclSignatoryList[2].signaturePage=2
+&yclSignatoryList[0].email=zjq115097475%40qq.com
+&yclSignatoryList[2].signatureY=20.0
+&yclSignatoryList[2].groupName=%E4%B9%99%E6%96%B9
+&yclSignatoryList[2].signatureX=20.0
+&yclSignatoryList[2].realName=%E5%BC%80%E6%88%B7%E9%93%B6%E8%A1%8C
+&yclSignatoryList[0].signatoryAuto=YES
+&yclDataStore.appSecret=%E6%82%A8%E7%9A%84appSecret
+&yclSignatoryList[0].signatureY=100.0
+&yclSignatoryList[0].sealPurpose=%E5%90%88%E5%90%8C%E4%B8%93%E7%94%A8%E7%AB%A0
+&yclSignatoryList[0].signatureX=100.0
+&yclSignatoryList[1].signatureY=100.0
+&yclDataStore.appKey=%E6%82%A8%E7%9A%84appKey
+&yclSignatoryList[1].signatureX=100.0
+```
 ##### *请求参数*
 
 详见SignatoryApiOrder.java
@@ -182,7 +268,25 @@ com.ichaoj.sxq.client.SxqClientTest#signature
 #### 接口四 司法存证
 将一组数据和文件进行上链存证。
 
+##### *具体请求*
+```
+/api/ocsv.json
+```
 
+##### *请求示例*
+```
+https://mock.sxqian.com/api/ocsv.json
+{
+    "appKey":"您的appKey",
+    "appSecret":"您的appSecret",
+    "callBackUrl":"http://127.0.0.1:7878/api/callback.json",
+    "data":"[{"name":"测试key","subOcsv":[{"fileName":"农事灌溉图","name":"农事灌溉图","type":"FILE","value":"https://oss.sxqian.com/app/mock/server/images/404_icon.png"},{"name":"测试子元素key","type":"INFOMATION","value":"测试子元素value"}],"subOcsvStr":"[{\"fileName\":\"农事灌溉图\",\"name\":\"农事灌溉图\",\"type\":\"FILE\",\"value\":\"https://oss.sxqian.com/app/mock/server/images/404_icon.png\"},{\"name\":\"测试子元素key\",\"type\":\"INFOMATION\",\"value\":\"测试子元素value\"}]","type":"INFOMATION","value":"测试value"}]",
+    "env":"https://mock.sxqian.com",
+    "isPublic":"PUBLIC",
+    "sign":"60f4a817ea220fba93523687b4a491d4",
+    "storeName":"测试存证名称"
+}
+```
 ##### *请求参数*
 |字段|类型|可为空|默认|注释|
 | ------------ | ------------ | ------------ | ------------ | ------------ |
@@ -237,6 +341,18 @@ com.ichaoj.sxq.client.SxqClientTest#ocsv
 
 #### 接口五 取回文件
 取回电子签约或存证的文件，返回的是数据流。
+
+##### *具体请求*
+```
+/api/fileNotary.json
+```
+
+##### *请求示例*
+```
+https://mock.sxqian.com/api/fileNotary.json?appKey=%E6%82%A8%E7%9A%84appKey
+&appSecret=%E6%82%A8%E7%9A%84appSecret
+&storeNo=YC0001046427
+```
 
 ##### *参数*
 
