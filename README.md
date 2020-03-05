@@ -103,9 +103,8 @@ storeNo:"YC0000000662"
 
 ```
 {
-success:"true", 
-message:"保存成功", 
-storeNo:"YC0000000662"
+success:"false", 
+message:"失败信息"
 }
 ```
 
@@ -273,6 +272,7 @@ SxqDataStore.java
 |storeName   |String   |否   |   |签约文件名称   |
 |isPublic   |String   |否   |   |是否公开（PUBLIC or PRIVATE ）   |
 |transAbs   |String   |是   |   |签约说明   |
+|contractTemplateId   |Long   |是   |   |使用的合同模板ID（与pdfFileBase64不能同时为空）   |
 
 
 ##### *签约人对象*
@@ -285,7 +285,8 @@ SxqSignatory.java
 |signatoryAuto   |String   |否   |   |是否自动签约 自动（YES） or 手动（NO）   |
 |signatoryUserType   |String   |否   |   |签约用户类型 个人（PERSONAL） or 企业（ENTERPRISE）   |
 |signatoryTime   |String   |否   |   |签约时间 (格式：2018-12-25 14:39   |
-|group   |GroupsEnum   |否   |   |签约方   |
+|groupChar  |String   |否   |   |签约人所属签约方编号   |
+|groupName  |String   |否   |   |签约人所属签约方名称   |
 |phone   |String   |是   |   |签约人手机号码（手机邮箱至少选择其中一个）   |
 |email   |String   |是   |   |签约人手机邮箱 （手机邮箱至少选择其中一个）  |
 |certNo   |String   |是   |   |签约方证件号   |

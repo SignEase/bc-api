@@ -401,7 +401,7 @@ public class SxqSignatory implements Serializable {
 	public void setGroup(GroupsEnum group){
 		Objects.requireNonNull(group);
 		setGroupChar(group.getGroupChar());
-//		setGroupName(group.getGroupName());
+		setGroupName(group.getGroupName());
 	}
 	/**
 	 * 分组顺序

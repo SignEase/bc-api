@@ -179,7 +179,19 @@ public class SxqDataStore implements Serializable {
 	 */
 	private Date rowAddTime;
 
+	/**
+	 * 使用的合同模板ID
+	 */
+	private Long contractTemplateId;
 
+
+	public Long getContractTemplateId() {
+		return contractTemplateId;
+	}
+
+	public void setContractTemplateId(Long contractTemplateId) {
+		this.contractTemplateId = contractTemplateId;
+	}
 
 	/**
 	 * @mbggenerated

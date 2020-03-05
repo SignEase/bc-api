@@ -48,10 +48,9 @@ public class SxqClientTest {
 		SxqDataStore sxqDataStore = new SxqDataStore();
 		try {
 
-			String filePath = "C:\\Users\\fan\\Desktop\\买卖合同.pdf";
+			String filePath = "C:\\Users\\11044\\Desktop\\aaa.pdf";
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 			order.setPdfFileBase64("demo8.pdf@"+encoder.encodeBuffer(bytes));
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,7 +65,6 @@ public class SxqClientTest {
 		SxqSignatory sxqSignatory1 = new SxqSignatory();
 		// 签约人姓名 必填
 		sxqSignatory1.setRealName("姓名");
-		sxqSignatory1.setSealPurpose("合同专用章");
 		// 签章类型 必填
 		sxqSignatory1.setSealType(SealTypeEnum.OFFICIAL.getCode());
 		// 是否自动签约  必填
@@ -77,21 +75,29 @@ public class SxqClientTest {
 		sxqSignatory1.setSignatoryTime("2018-2-28");
 		//签约方 必填
 		sxqSignatory1.setGroup(GroupsEnum.PARTY_A);
-		sxqSignatory1.setGroupName("甲");
-
 		//签约人手机邮箱 选填
 		sxqSignatory1.setEmail("zjq115097475@qq.com");
+//		sxqSignatory1.setPhone("15123164744");
 		//签约方证件号 选填
 //		yclSignatory1.setCertNo("24324342342323234243");
 		//填了证件号就必选填证件类型
-		sxqSignatory1.setCertType(CertTypeEnum.INSTITUTION_CODE.getCode());
+//		sxqSignatory1.setCertType(CertTypeEnum.INSTITUTION_CODE.getCode());
 		//签章x坐标 （不填写时系统自动生成）
 		sxqSignatory1.setSignatureX(100.0);
 		//签章y坐标 （不填写时系统自动生成）
 		sxqSignatory1.setSignatureY(100.0);
 		//签章页 （不填时默认最后一页）
 		sxqSignatory1.setSignaturePage(1);
-		sxqSignatory1.setKeywords("开户银行");
+		//签章定位关键词（与x.y 必须二选一）
+//		sxqSignatory1.setKeywords("开户银行");
+		//章的用途(签章类型为企业是必填)
+		sxqSignatory1.setSealPurpose("合同专用章");
+		//签章姓名是否掩码 （为true时仅显示姓，其余的 * 号代替）
+//		sxqSignatory1.setRealNameMask(true);
+		//签章证件号是否掩码 （为true时后四位用 * 号代替）
+//		sxqSignatory1.setCertNoMask(true);
+		//章编号（防伪码）
+//		sxqSignatory1.setSealSn("123456789456123");
 
 
 		//乙方
@@ -108,7 +114,6 @@ public class SxqClientTest {
 		sxqSignatory2.setSignatoryTime("2018-2-28");
 		//签约方 必填
 		sxqSignatory2.setGroup(GroupsEnum.PARTY_B);
-		sxqSignatory2.setGroupName("乙方");
 
 		//签约人手机邮箱 选填
 //		yclSignatory2.setEmail("888888@qq.com");
@@ -139,7 +144,6 @@ public class SxqClientTest {
 		sxqSignatory3.setSignatoryTime("2018-2-28");
 		//签约方 必填
 		sxqSignatory3.setGroup(GroupsEnum.PARTY_B);
-		sxqSignatory3.setGroupName("乙方");
 
 		//签约人手机邮箱 选填
 //		yclSignatory3.setEmail("2222222@qq.com");
@@ -190,8 +194,8 @@ public class SxqClientTest {
 	 */
 	@Test
 	public void fetchFile() throws IOException {
-        byte[] fileContent = sxqClient.downloadFile("YC0000011586");
-        FileOutputStream outputStream = new FileOutputStream("I:\\testdownload2.pdf");
+        byte[] fileContent = sxqClient.downloadFile("YC0001046427");
+        FileOutputStream outputStream = new FileOutputStream("C:\\Users\\11044\\Desktop\\bbb.pdf");
         outputStream.write(fileContent);
     }
 
