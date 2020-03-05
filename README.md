@@ -159,7 +159,7 @@ storeNo:"YC0000000662"
 ```
 {
 success:"false", 
-message:"pdfFileBase64格式错误，需要格式:文件名@base64编码字符串", 
+message:"错误原因", 
 storeNo:""
 }
 ```
