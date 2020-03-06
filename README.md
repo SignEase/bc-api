@@ -43,8 +43,8 @@ SxqClient sxqClient = new SxqClient("您的appKey","您的appSercret",Env.LOCAL)
 
 |环境          |      HTTPS请求环境地址
 |:----         |:-------   
-|测试环境      |https://sxqian.com   
-|正式环境      |https://mock.sxqian.com
+|正式环境      |https://sxqian.com   
+|测试环境      |https://mock.sxqian.com
 
 ---
 
