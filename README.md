@@ -8,6 +8,7 @@
 2. 在`账户管理`->`基本资料`里申请并获取`AppKey`和`AppSecret`。
 3. 下载并集成sxq-client到本地工程中。Maven项目可以按照如下pom配置导入。
 4. 参考`com.ichaoj.sxq.client.SxqClientTest`里的用例进行调试。
+5. 请求参数与请求事例参数有出入请以请求参数为准，请求事例含有的参数而请求参数中没有的参数为sdk生成。
 
 ```
 仓库地址：
@@ -108,7 +109,13 @@ com.ichaoj.sxq.client.SxqClientTest#ping
 
 ##### *请求示例*
 ```
-https://mock.sxqian.com/api/filePreservation.json?fileName=abaac.pdf&sign=704c5227a18151f5ab72edd4739a12fb&isPublic=PUBLIC&appKey=%E6%82%A8%E7%9A%84appKey&appSecret=%E6%82%A8%E7%9A%84appSecret&storeName=mystorae&fileBase64=保全文件的base64
+https://mock.sxqian.com/api/filePreservation.json?fileName=abaac.pdf
+&sign=704c5227a18151f5ab72edd4739a12fb
+&isPublic=PUBLIC
+&appKey=%E6%82%A8%E7%9A%84appKey
+&appSecret=%E6%82%A8%E7%9A%84appSecret
+&storeName=mystorae
+&fileBase64=保全文件的base64
 ```
 
 ##### *请求参数*
@@ -119,6 +126,8 @@ https://mock.sxqian.com/api/filePreservation.json?fileName=abaac.pdf&sign=704c52
 |storeName      |String     |否      |       | 存储名称    |
 |fileName       |String     |否      |       | 文件名称    |
 |isPublic       |String     |否      |       |  是否公开   |
+|appKey         |String     |否      |       | 用户appkey    |
+|appSecret      |String     |否      |       |  用户appSecret   |
 
 
 ##### *请求成功*
@@ -228,6 +237,8 @@ https://mock.sxqian.com/api/signatory.json?pdfFileBase64=demo8.pdf%40PDF文件�
 |yclSignatory   |YclSignatory   |否  |   | 签约人信息                                        |
 |realNameMask   |Boolean        |是  |   | true: 所有签约人姓名打掩码。仅显示姓，其余的显示*号      |
 |certNoMask     |Boolean        |是  |   | true: 所有签约人证件号打掩码。后四位显示*号          |
+|appKey         |String         |否  |   | 用户appkey    |
+|appSecret      |String         |否  |   |  用户appSecret   |
 
 
 ##### *请求成功*
@@ -288,13 +299,15 @@ https://mock.sxqian.com/api/ocsv.json
 }
 ```
 ##### *请求参数*
-|字段|类型|可为空|默认|注释|
+|字段          |类型          |可为空        |默认          |注释          |
 | ------------ | ------------ | ------------ | ------------ | ------------ |
-|ocsvs      |List  |否   |       |存证内容数组               |
-|storeId    |Long  |是   |null   |存储编号               |
-|isPublic   |String|是   |PRIVATE|是否公开               |
-|callback   |String|是   |null   |司法存证完成后的回调接口|
-|storeName  |String|是   |null   |设置存证名称（只有当storeId 的值为空的时候，storeName才有效）|
+|ocsvs         |List          |否            |              |存证内容数组               |
+|storeId       |Long          |是            |null          |存储编号               |
+|isPublic      |String        |是            |PRIVATE       |是否公开               |
+|callback      |String        |是            |null          |司法存证完成后的回调接口|
+|storeName     |String        |是            |null          |设置存证名称（只有当storeId 的值为空的时候，storeName才有效）|
+|appKey        |String        |否            |              | 用户appkey    |
+|appSecret     |String        |否            |              |  用户appSecret   |
 
 ##### *请求成功*
 ```
@@ -359,7 +372,8 @@ https://mock.sxqian.com/api/fileNotary.json?appKey=%E6%82%A8%E7%9A%84appKey
 |字段|类型|可为空|默认|注释|
 | ------------ | ------------ | ------------ | ------------ | ------------ |
 |storeNo   |String   |否   |   |存储编号   |
-
+|appKey         |String         |否  |   | 用户appkey    |
+|appSecret      |String         |否  |   |  用户appSecret   |
 ##### *请求成功示例*
 无
 

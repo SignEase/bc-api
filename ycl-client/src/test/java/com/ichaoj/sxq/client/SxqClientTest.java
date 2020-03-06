@@ -47,7 +47,6 @@ public class SxqClientTest {
 		SignatoryApiOrder order = new SignatoryApiOrder();
 		SxqDataStore sxqDataStore = new SxqDataStore();
 		try {
-
 			String filePath = "C:\\Users\\11044\\Desktop\\aaa.pdf";
 			byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 			order.setPdfFileBase64("demo8.pdf@"+encoder.encodeBuffer(bytes));
