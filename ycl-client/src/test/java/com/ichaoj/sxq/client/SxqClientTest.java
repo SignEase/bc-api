@@ -27,8 +27,6 @@ public class SxqClientTest {
 	public static void init(){
 		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.TEST);
 	}
-
-
 	/**
 	 * 测试服务器是否连通
 	 */
@@ -37,6 +35,16 @@ public class SxqClientTest {
 		ResultBase result = sxqClient.ping();
 		System.out.println(result.toString());
 	}
+
+	/********************************** 注意 ***************************************/
+	/** #1 需要注意如果签约人设置了手机号或邮箱的，会作为账户的唯一标识：
+	 /** a）如果该标识找到已存在账户的，会直接使用已存在账户下的信息进行签约，如：实名信息。
+	 /** b）如果该标识没有查找到已存在账户的，则会用设置的信息创建新的账户信息，并完成签合约。
+	 /**
+	 /** #2 区块链身份证功能在测试环境无法正常扫码查看，会跳转到线上环境。需要在线上环境才能正常使用。
+	 /**
+	 /** #3 签约的合同底板位于Contract/BaseBoard，Fetch方法取回的合同位于Contract/Signed
+	 /*******************************************************************************/
 
 	/**
 	 * 电子签约（甲乙两人签约）
@@ -239,7 +247,7 @@ public class SxqClientTest {
 		//签约方证件号
 		sxqSignatory1.setCertNo("91500000MA5UCYU7XY");
 		//证件类型
-		sxqSignatory1.setCertType(CertTypeEnum.IDENTITY_CARD.getCode());
+		sxqSignatory1.setCertType(CertTypeEnum.INSTITUTION_CODE.getCode());
 		// 签章类型 必填
 		sxqSignatory1.setSealType(SealTypeEnum.OFFICIAL.getCode());
 		// 是否自动签约  必填
