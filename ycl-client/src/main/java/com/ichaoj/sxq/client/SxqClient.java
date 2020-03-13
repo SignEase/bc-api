@@ -155,7 +155,7 @@ public class SxqClient {
         String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
         params.put("sign", signStr);
         try {
-            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.SIGNATORY.getCode(), params, 60000, 60000);
+            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.SIGNATORY.getCode(), params, 0, 0);
 
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
