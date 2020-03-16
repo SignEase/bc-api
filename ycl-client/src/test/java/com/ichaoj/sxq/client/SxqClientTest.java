@@ -179,7 +179,7 @@ public class SxqClientTest {
 		//乙方
 		SxqSignatory sxqSignatory2 = new SxqSignatory();
 		// 签约人姓名 必填
-		sxqSignatory2.setRealName("乙方");
+		sxqSignatory2.setRealName("乙方企业账户账户");
 		// 签章类型 必填
 		sxqSignatory2.setSealType(SealTypeEnum.OFFICIAL.getCode());
 		// 是否自动签约  必填
@@ -235,7 +235,7 @@ public class SxqClientTest {
 		//甲方
 		SxqSignatory sxqSignatory1 = new SxqSignatory();
 		// 签约人姓名 必填
-		sxqSignatory1.setRealName("甲方");
+		sxqSignatory1.setRealName("甲方企业账户");
 		//签约方证件号
 		sxqSignatory1.setCertNo("91500000MA5UCYU7XY");
 		//证件类型
@@ -262,7 +262,7 @@ public class SxqClientTest {
 		//乙方
 		SxqSignatory sxqSignatory2 = new SxqSignatory();
 		// 签约人姓名 必填
-		sxqSignatory2.setRealName("乙方");
+		sxqSignatory2.setRealName("乙方企业账户");
 		// 签章类型 必填
 		sxqSignatory2.setSealType(SealTypeEnum.OFFICIAL.getCode());
 		// 是否自动签约  必填
