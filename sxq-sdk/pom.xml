@@ -1,12 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-	
 	<groupId>com.ichaoj.sxq</groupId>
-	<artifactId>sxq-client</artifactId>
+	<artifactId>sxq-sdk-java</artifactId>
 	<version>0.1.4</version>
-	<name>sxq-client</name>
+	<name>sxq-sdk-java</name>
   	<url>http://maven.apache.org</url>
  	<properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -73,9 +71,9 @@
 	</build>
 	<distributionManagement>
 		<repository>
-			<id>nexus-releases</id>
-			<name>Nexus Release Repository</name>
-			<url>http://192.168.45.199:8081/nexus/content/repositories/thirdparty/</url>
+			<id>cj-releases</id>
+			<name>CJ Release Repository</name>
+			<url>http://nexus.ichaoj.com/nexus/content/repositories/thirdparty/</url>
 		</repository>
 	</distributionManagement>
 </project>
