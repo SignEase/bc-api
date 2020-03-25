@@ -16,7 +16,7 @@
     <repository>
         <id>sxq-repo</id>
         <name>sxq repository</name>
-        <url>http://120.79.243.35:8081/nexus/content/groups/public/</url>
+        <url>http://nexus.ichaoj.com/nexus/content/groups/public/</url>
         <releases>
             <enabled>true</enabled>
         </releases>
@@ -24,7 +24,7 @@
 </repositories>
 <dependency>
     <groupId>com.ichaoj.sxq</groupId>
-    <artifactId>sxq-client</artifactId>
+    <artifactId>sxq-sdk-java</artifactId>
     <version>0.1.5</version>
 </dependency>
 ```
