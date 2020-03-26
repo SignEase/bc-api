@@ -1,11 +1,13 @@
 package com.ichaoj.sxq.client.beans;
 
 import com.ichaoj.sxq.client.enums.GroupsEnum;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+@Data
 public class SxqSignatory implements Serializable {
 
 	/**
@@ -154,6 +156,27 @@ public class SxqSignatory implements Serializable {
 	 * 章编号（防伪码）
 	 */
 	private String sealSn;
+
+	/**
+	 * 是否需要由省心签进行实名认证
+	 */
+	private boolean sxqVerified = true;
+	/**
+	 * 签约序列
+	 */
+	private Integer signSequenceNo;
+	/**
+	 * 是否由该签约方指定下一个签约方
+	 */
+	private boolean setNext = false;
+	/**
+	 * 是否使用审批流
+	 */
+	private boolean useApproval = false;
+	/**
+	 * 使用的审批流编号
+	 */
+	private Integer approvalNo;
 
 
 	public String getCertNo() {

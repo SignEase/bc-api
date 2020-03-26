@@ -64,6 +64,14 @@ public class SxqClientTest {
 		sxqDataStore.setIsPublic(StoreVisibleEnum.PUBLIC.getCode());
 //		签约的说明
         sxqDataStore.setTransAbs("这是存证说明");
+//		这是签约完成后回调通知的连接
+        sxqDataStore.setCallBackUrl("请求地址");
+//      是否按照设置的签约顺序进行签约（默认false）
+        sxqDataStore.setSignSequence(false);
+//      是否对非签约人员展示合同预览（默认false）
+        sxqDataStore.setShowSnapshot(false);
+//      是否强制要求签约人在签署合同完成后设置登陆密码（默认false）
+        sxqDataStore.setSignatoryAddPassword(false);
 		order.setSxqDataStore(sxqDataStore);
 
 		//甲方
@@ -77,7 +85,7 @@ public class SxqClientTest {
 		// 签章类型 必填
 		sxqSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		sxqSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
+		sxqSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
 		// 签约用户类型 必填
 		sxqSignatory1.setSignatoryUserType(SignatoryUserTypeEnum.PERSONAL.getCode());
 		// 签约时间 必填
@@ -101,6 +109,19 @@ public class SxqClientTest {
 //		sxqSignatory1.setRealNameMask(true);
 		//签章证件号是否掩码 （为true时后四位用 * 号代替）
 //		sxqSignatory1.setCertNoMask(true);
+//		是否需要省心签进行实名认证（默认true，
+//		仅对传输了实名信息的用户有效，未传输实名信息则必定进行实名认证）
+//		sxqSignatory1.setSxqVerified(true);
+//		签约顺序（仅当sxqDataStore.setSignSequence(true);时有效）
+//		sxqSignatory1.setSignSequenceNo(0);
+//		该签约方设置下一个签约方
+//		sxqSignatory1.setSetNext(false);
+//		使用该签约方的审批流
+//		sxqSignatory1.setUseApproval(false);
+//		使用该签约方的审批流编号（仅sxqSignatory1.setUseApproval(true);时有效）
+//		sxqSignatory1.setApprovalNo(null);
+
+
 
 		//乙方
 		SxqSignatory sxqSignatory2 = new SxqSignatory();
@@ -109,7 +130,7 @@ public class SxqClientTest {
 		// 签章类型 必填
 		sxqSignatory2.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		sxqSignatory2.setSignatoryAuto(BooleanEnum.YES.getCode());
+		sxqSignatory2.setSignatoryAuto(BooleanEnum.NO.getCode());
 		// 签约用户类型 必填
 		sxqSignatory2.setSignatoryUserType(SignatoryUserTypeEnum.PERSONAL.getCode());
 		// 签约时间 必填
@@ -612,7 +633,7 @@ public class SxqClientTest {
 	 */
 	@Test
 	public void fetchFile() throws IOException {
-        byte[] fileContent = sxqClient.downloadFile("YC0001046471");
+        byte[] fileContent = sxqClient.downloadFile("1046561");
         FileOutputStream outputStream = new FileOutputStream("C:\\Users\\11044\\Desktop\\bbb.pdf");
         outputStream.write(fileContent);
     }

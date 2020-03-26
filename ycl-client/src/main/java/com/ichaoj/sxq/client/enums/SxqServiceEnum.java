@@ -9,7 +9,7 @@ public enum SxqServiceEnum {
 	STORE("/api/filePreservation.json", "保全服务"),
 	/** OCSV: on-chain storage & validation **/
 	OCSV("/api/ocsv.json", "上链存证服务"),
-	SIGNATORY("/api/signatory.json", "签章服务"),
+	SIGNATORY("/api/draftContract.json", "签章服务"),
 	FILE_DOWNLOAD("/api/fileNotary.json", "文件下载");
 
 	private String code;

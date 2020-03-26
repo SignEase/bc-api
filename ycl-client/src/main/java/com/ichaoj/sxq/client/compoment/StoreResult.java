@@ -9,20 +9,34 @@ public class StoreResult extends ResultBase {
     /**
      * 存储编号
      */
-    private String storeNo;
+    private Long contractId;
 
-    public String getStoreNo() {
-        return storeNo;
+    /**
+     * 签署链接
+     */
+    private String signUrl;
+
+    public Long getContractId() {
+        return contractId;
     }
 
-    public void setStoreNo(String storeNo) {
-        this.storeNo = storeNo;
+    public void setContractId(Long contractId) {
+        this.contractId = contractId;
+    }
+
+    public String getSignUrl() {
+        return signUrl;
+    }
+
+    public void setSignUrl(String signUrl) {
+        this.signUrl = signUrl;
     }
 
     @Override
     public String toString() {
         return "StoreResult{" +
-                "storeNo='" + storeNo + '\'' +
+                "contractId=" + contractId +
+                ", signUrl='" + signUrl + '\'' +
                 "} " + super.toString();
     }
 }

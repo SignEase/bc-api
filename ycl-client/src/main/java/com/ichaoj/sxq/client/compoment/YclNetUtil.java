@@ -89,8 +89,8 @@ public class YclNetUtil {
      * @return 响应字符串
      * @throws IOException
      */
-    public static String doPost(String url, Map<String, String> params, int connectTimeout, int readTimeout) throws IOException {
-        return doPost(url, params, DEFAULT_CHARSET, connectTimeout, readTimeout);
+    public static String doPost(String url, Map<String, String> params, int connectTimeout, int readTimeout, String appKey, String appSecret) throws IOException {
+        return doPost(url, params, DEFAULT_CHARSET, connectTimeout, readTimeout, appKey, appSecret);
     }
 
     /**
@@ -102,14 +102,14 @@ public class YclNetUtil {
      * @return 响应字符串
      * @throws IOException
      */
-    public static String doPost(String url, Map<String, String> params, String charset, int connectTimeout, int readTimeout) throws IOException {
+    public static String doPost(String url, Map<String, String> params, String charset, int connectTimeout, int readTimeout, String appKey, String appSecret) throws IOException {
         String ctype = "application/x-www-form-urlencoded;charset=" + charset;
         String query = buildQuery(params, charset);
         byte[] content = {};
         if (query != null) {
             content = query.getBytes(charset);
         }
-        return doPost(url, ctype, content, connectTimeout, readTimeout);
+        return doPost(url, ctype, content, connectTimeout, readTimeout, appKey, appSecret);
     }
 
     /**
@@ -121,13 +121,15 @@ public class YclNetUtil {
      * @return 响应字符串
      * @throws IOException
      */
-    public static String doPost(String url, String ctype, byte[] content, int connectTimeout, int readTimeout) throws IOException {
+    public static String doPost(String url, String ctype, byte[] content, int connectTimeout, int readTimeout, String appKey, String appSecret) throws IOException {
         HttpURLConnection conn = null;
         OutputStream out = null;
         String rsp;
         try {
             try {
-                conn = getConnection(new URL(url), METHOD_POST, ctype);
+                conn = getConnection(new URL(url), METHOD_POST, ctype, null, null);
+                conn.setRequestProperty("x-sxq-open-accesstoken", appKey);
+                conn.setRequestProperty("x-sxq-open-accesssecret", appSecret);
                 conn.setConnectTimeout(connectTimeout);
                 conn.setReadTimeout(readTimeout);
             } catch (IOException e) {
@@ -209,7 +211,7 @@ public class YclNetUtil {
             String ctype = "application/x-www-form-urlencoded;charset=" + charset;
             String query = buildQuery(params, charset);
             try {
-                conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype);
+                conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype, null, null);
             } catch (IOException e) {
                 Map<String, String> map = getParamsFromUrl(url);
                 logger.error("服务["+map.get("service")+"]请求失败+"+ e.getMessage());
@@ -233,10 +235,10 @@ public class YclNetUtil {
         return rsp;
     }
 
-    public static byte[] doGetDownLoad(String url, Map<String, String> params) throws IOException {
+    public static byte[] doGetDownLoad(String url, Map<String, String> params, String appKey, String appSecret) throws IOException {
         String ctype = "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET;
         String query = buildQuery(params, DEFAULT_CHARSET);
-        HttpURLConnection conn =  getConnection(buildGetUrl(url, query), METHOD_GET, ctype);
+        HttpURLConnection conn =  getConnection(buildGetUrl(url, query), METHOD_GET, ctype, appKey, appSecret);
 
         try {
             return getStreamAsByteArray(conn);
@@ -254,7 +256,7 @@ public class YclNetUtil {
         String s = JSONObject.toJSONString(oq);
         logger.info("请求参数：" + s);
         try {
-            String s1 = YclNetUtil.doPost(oq.getEnv() + SxqServiceEnum.OCSV.getCode(), "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET, s.getBytes(DEFAULT_CHARSET), 60000, 60000);
+            String s1 = YclNetUtil.doPost(oq.getEnv() + SxqServiceEnum.OCSV.getCode(), "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET, s.getBytes(DEFAULT_CHARSET), 60000, 60000, oq.getAppKey(), oq.getAppSecret());
             re = JSONObject.parseObject(s1, ResultInfo.class);
             logger.info("返回参数：" + s1);
         } catch (IOException e) {
@@ -263,14 +265,15 @@ public class YclNetUtil {
         return re;
     }
 
-    private static HttpURLConnection getConnection(URL url, String method,
-                                                   String ctype) throws IOException {
+    private static HttpURLConnection getConnection(URL url, String method, String ctype, String appKey, String appSecret) throws IOException {
         HttpURLConnection conn;
         if ("https".equals(url.getProtocol())) {
             HttpsURLConnection connHttps = (HttpsURLConnection) url.openConnection();
             connHttps.setSSLSocketFactory(socketFactory);
             connHttps.setHostnameVerifier(verifier);
             conn = connHttps;
+            conn.setRequestProperty("x-sxq-open-accesstoken", appKey);
+            conn.setRequestProperty("x-sxq-open-accesssecret", appSecret);
         } else {
             conn = (HttpURLConnection) url.openConnection();
         }

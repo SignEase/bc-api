@@ -17,6 +17,7 @@ import com.yiji.openapi.tool.util.DigestUtil.DigestALGEnum;
 import com.yiji.openapi.tool.util.StringUtils;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class SxqClient {
     public ResultBase ping() {
         ResultBase resultBase = new ResultBase();
         try {
-            String json = YclNetUtil.doPost(this.env.getCode() + SxqServiceEnum.PING.getCode(), null, 30000, 30000);
+            String json = YclNetUtil.doPost(this.env.getCode() + SxqServiceEnum.PING.getCode(), null, 30000, 30000, this.appKey, this.appSecret);
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));
@@ -51,8 +52,6 @@ public class SxqClient {
         Map<String, String> params = new HashMap<>();
         storeApiOrder.check();
         //设置参数=================================================================
-        params.put("appKey", this.appKey);
-        params.put("appSecret", this.appSecret);
         params.put("fileName", storeApiOrder.getFileName());
         params.put("storeName", storeApiOrder.getStoreName());
         params.put("fileBase64", storeApiOrder.getFileBase64());
@@ -61,12 +60,12 @@ public class SxqClient {
         String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
         params.put("sign", signStr);
         try {
-            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.STORE.getCode(), params, 30000, 30000);
+            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.STORE.getCode(), params, 30000, 30000, this.appKey, this.appSecret);
 
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));
-            resultBase.setStoreNo(jsonObject.getString("storeNo"));
+            resultBase.setContractId(Long.valueOf(jsonObject.getString("storeNo")));
             return resultBase;
         } catch (IOException e) {
             resultBase.setMessage(e.getMessage());
@@ -84,10 +83,7 @@ public class SxqClient {
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put("yclDataStore.appKey", this.appKey);
-        params.put("yclDataStore.appSecret", this.appSecret);
         params.put("pdfFileBase64", order.getPdfFileBase64());
-
         params.put("yclDataStore.userBizNumber", order.getSxqDataStore().getUserBizNumber());
         params.put("yclDataStore.storeName", order.getSxqDataStore().getStoreName());
         params.put("yclDataStore.isPublic", order.getSxqDataStore().getIsPublic());
@@ -155,12 +151,15 @@ public class SxqClient {
         String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
         params.put("sign", signStr);
         try {
-            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.SIGNATORY.getCode(), params, 0, 0);
+            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.SIGNATORY.getCode(), params, 0, 0, this.appKey, this.appSecret);
 
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));
-            resultBase.setStoreNo(jsonObject.getString("storeNo"));
+            JSONObject data = (JSONObject) jsonObject.get("data");
+            resultBase.setContractId(data.getLong("contractId"));
+            resultBase.setSignUrl(data.getString("signUrl"));
+
             return resultBase;
         } catch (IOException e) {
             resultBase.setMessage(e.getMessage());
@@ -175,12 +174,10 @@ public class SxqClient {
      */
     public byte[] downloadFile(String storeNo) {
         Map<String, String> params = new HashMap<>(3);
-        params.put("appKey", this.appKey);
-        params.put("appSecret", this.appSecret);
         params.put("storeNo", storeNo);
 
         try {
-            return YclNetUtil.doGetDownLoad(env.getCode() + SxqServiceEnum.FILE_DOWNLOAD.getCode(), params);
+            return YclNetUtil.doGetDownLoad(env.getCode() + SxqServiceEnum.FILE_DOWNLOAD.getCode(), params, this.appKey, this.appSecret);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -239,6 +236,6 @@ public class SxqClient {
     private String doPost(SxqServiceEnum yclServiceEnum, Map<String, String> params, int connectTimeout,
                           int readTimeout) throws IOException {
         String reqUrl = env.getCode() + yclServiceEnum.getCode();
-        return YclNetUtil.doPost(reqUrl, params, connectTimeout, readTimeout);
+        return YclNetUtil.doPost(reqUrl, params, connectTimeout, readTimeout, this.appKey, this.appSecret);
     }
 }
