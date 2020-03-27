@@ -1,8 +1,8 @@
 package com.ichaoj.sxq.client.beans;
 
-import java.text.DecimalFormat;
-
 import com.ichaoj.sxq.client.util.Assert;
+
+import java.text.DecimalFormat;
 
 public class FilePreservationOrder extends SxqDataStore {
 
