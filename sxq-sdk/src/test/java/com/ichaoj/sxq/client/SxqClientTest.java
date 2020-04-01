@@ -25,7 +25,7 @@ public class SxqClientTest {
 	
 	@BeforeClass
 	public static void init(){
-		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.TEST);
+		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.LOCAL);
 	}
 	/**
 	 * 测试服务器是否连通
@@ -665,5 +665,31 @@ public class SxqClientTest {
 		ResultInfo resultInfo = sxqClient.ocsv(ocsvs, null, StoreVisibleEnum.PUBLIC.getCode(), "http://127.0.0.1:7878/api/callback.json", "测试存证名称");
 		String s = JSONObject.toJSONString(resultInfo);
 		System.out.println(s);
+	}
+
+	/**
+	 * @author SOFAS
+	 * @description 查询appkey用户的自定义logo
+	 * @date  2020/4/1
+	 * @return void
+	 **/
+	@Test
+	public void queryCustomizedLogo(){
+		ResultInfo resultInfo = sxqClient.queryCustomizedLogo();
+		System.out.println(resultInfo);
+		System.out.println(JSONObject.toJSONString(resultInfo));
+	}
+
+	/**
+	 * @author SOFAS
+	 * @description 设置appkey用户的自定义logo
+	 * @date  2020/4/1
+	 * @return void
+	 **/
+	@Test
+	public void setCustomizedLogo(){
+		ResultInfo resultInfo = sxqClient.setCustomizedLogo("C:\\Users\\admin\\Desktop\\TIM图片20200331115327.png");
+		System.out.println(resultInfo);
+		System.out.println(JSONObject.toJSONString(resultInfo));
 	}
 }

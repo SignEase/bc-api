@@ -391,6 +391,127 @@ https://mock.sxqian.com/api/fileNotary.json?appKey=%E6%82%A8%E7%9A%84appKey
 com.ichaoj.sxq.client.SxqClientTest#fetchFile
 
 
+#### 接口六 查询已设置的自定义logo
+查询已设置的自定义logo，返回logo的预览网址
+
+##### *具体请求*
+```
+/api/queryCustomizedLogo.json
+```
+
+##### *请求header*
+```
+x-sxq-open-accesstoken: 您的appkey
+x-sxq-open-accesssecret: 您的appsecret
+```
+
+##### *请求示例*
+```
+https://mock.sxqian.com/api/queryCustomizedLogo.json
+```
+
+##### *参数*
+无
+
+##### *请求成功示例*
+```
+{
+    "code":200,
+    "data":"logo预览地址",
+    "message":"查询成功",
+    "success":true
+}
+```
+
+##### *返回参数说明*
+字段      |类型     |空|默认|注释|
+|:----    |:------- |:--- |---|------      |
+|success  |boolean  |否 |    |   是否成功 true 为成功，false 为失败  |
+|message  |String   |否 |    |   描述，失败时为失败原因  |
+|data     |String   |是 |    |   logo预览地址  |
+|code     |Integer  |是 |    |   请求码  |
+
+##### *请求失败示例*
+{
+    "code":500,
+    "message":"查询失败",
+    "success":false
+}
+
+##### *返回参数说明*
+字段      |类型     |空|默认|注释|
+|:----    |:------- |:--- |---|------      |
+|success  |boolean  |否 |    |   是否成功 true 为成功，false 为失败  |
+|message  |String   |否 |    |   描述，失败时为失败原因  |
+|code     |Integer  |是 |    |   请求码  |
+
+##### *示例代码*
+com.ichaoj.sxq.client.SxqClientTest#queryCustomizedLogo
+
+
+#### 接口七 设置或修改的自定义logo
+设置或修改的自定义logo
+
+##### *具体请求*
+```
+/api/setCustomizedLogo.json
+```
+
+##### *请求header*
+```
+x-sxq-open-accesstoken: 您的appkey
+x-sxq-open-accesssecret: 您的appsecret
+```
+
+##### *请求示例*
+```
+https://mock.sxqian.com/api/setCustomizedLogo.json
+{
+    "logoBase64":自定义logo的base64,
+}
+```
+
+##### *参数*
+字段      |类型     |空|默认|注释|
+|:----    |:------- |:--- |---|------      |
+|logoBase64  |String  |否 |    |   自定义logo文件转换成的base64  |
+
+##### *请求成功示例*
+```
+{
+    "code":200,
+    "message":"设置自定义logo成功",
+    "success":true
+}
+```
+
+##### *返回参数说明*
+字段      |类型     |空|默认|注释|
+|:----    |:------- |:--- |---|------      |
+|success  |boolean  |否 |    |   是否成功 true 为成功，false 为失败  |
+|message  |String   |否 |    |   描述，失败时为失败原因  |
+|code     |Integer  |是 |    |   请求码  |
+
+##### *请求失败示例*
+{
+    "code":500,
+    "message":"设置失败",
+    "success":false
+}
+
+##### *返回参数说明*
+字段      |类型     |空|默认|注释|
+|:----    |:------- |:--- |---|------      |
+|success  |boolean  |否 |    |   是否成功 true 为成功，false 为失败  |
+|message  |String   |否 |    |   描述，失败时为失败原因  |
+|code     |Integer  |是 |    |   请求码  |
+
+##### *示例代码*
+
+com.ichaoj.sxq.client.SxqClientTest#setCustomizedLogo
+
+
+
 #### 通用对象属性
 
 ##### *文件存证对象*
