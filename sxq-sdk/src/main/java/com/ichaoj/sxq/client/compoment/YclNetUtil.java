@@ -188,8 +188,8 @@ public class YclNetUtil {
      * @return 响应字符串
      * @throws IOException
      */
-    public static String doGet(String url, Map<String, String> params) throws IOException {
-        return doGet(url, params, DEFAULT_CHARSET);
+    public static String doGet(String url, Map<String, String> params, HashMap<String, String> headerMap) throws IOException {
+        return doGet(url, params, DEFAULT_CHARSET, headerMap);
     }
 
     /**
@@ -201,8 +201,7 @@ public class YclNetUtil {
      * @return 响应字符串
      * @throws IOException
      */
-    public static String doGet(String url, Map<String, String> params,
-                               String charset) throws IOException {
+    public static String doGet(String url, Map<String, String> params, String charset, HashMap<String, String> headerMap) throws IOException {
         HttpURLConnection conn = null;
         String rsp;
 
@@ -210,7 +209,7 @@ public class YclNetUtil {
             String ctype = "application/x-www-form-urlencoded;charset=" + charset;
             String query = buildQuery(params, charset);
             try {
-                conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype, null);
+                conn = getConnection(buildGetUrl(url, query), METHOD_GET, ctype, headerMap);
             } catch (IOException e) {
                 Map<String, String> map = getParamsFromUrl(url);
                 logger.error("服务["+map.get("service")+"]请求失败+"+ e.getMessage());
@@ -232,20 +231,6 @@ public class YclNetUtil {
         }
 
         return rsp;
-    }
-
-    public static byte[] doGetDownLoad(String url, Map<String, String> params, HashMap<String, String> headerMap) throws IOException {
-        String ctype = "application/x-www-form-urlencoded;charset=" + DEFAULT_CHARSET;
-        String query = buildQuery(params, DEFAULT_CHARSET);
-        HttpURLConnection conn =  getConnection(buildGetUrl(url, query), METHOD_GET, ctype, headerMap);
-
-        try {
-            return getStreamAsByteArray(conn);
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
     }
 
     public static ResultInfo ocsv(OcsvRequst oq){
@@ -349,30 +334,8 @@ public class YclNetUtil {
             return getStreamAsString(conn.getInputStream(), charset);
         } else {
             String msg = getStreamAsString(es, charset);
-            if (StringUtils.isEmpty(msg)) {
-                throw new IOException(conn.getResponseCode() + ":" + conn.getResponseMessage());
-            } else {
-                throw new IOException(msg);
-            }
+            throw new IOException(StringUtils.isEmpty(msg) ? conn.getResponseCode() + ":" + conn.getResponseMessage() : msg);
         }
-    }
-
-    private static byte[] getStreamAsByteArray(HttpURLConnection conn) throws IOException{
-        int responseCode = conn.getResponseCode();
-
-        InputStream errorStream = conn.getErrorStream();
-        if(errorStream == null){
-            return getStreamAsByteArray(conn.getInputStream());
-        } else {
-            String charset = getResponseCharset(conn.getContentType());
-            String msg = getStreamAsString(errorStream, charset);
-            if (StringUtils.isEmpty(msg)) {
-                throw new IOException(conn.getResponseCode() + ":" + conn.getResponseMessage());
-            } else {
-                throw new IOException(msg);
-            }
-        }
-
     }
 
     private static byte[] getStreamAsByteArray(InputStream stream) throws IOException{

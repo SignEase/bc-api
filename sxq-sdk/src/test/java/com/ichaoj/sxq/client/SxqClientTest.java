@@ -4,6 +4,7 @@ package com.ichaoj.sxq.client;
 import com.ichaoj.sxq.client.beans.*;
 import com.ichaoj.sxq.client.compoment.*;
 import com.ichaoj.sxq.client.enums.*;
+import com.yiji.openapi.tool.codec.Base64;
 import com.yiji.openapi.tool.fastjson.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class SxqClientTest {
 	
 	@BeforeClass
 	public static void init(){
-		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.TEST);
+		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.LOCAL);
 	}
 	/**
 	 * 测试服务器是否连通
@@ -633,9 +634,13 @@ public class SxqClientTest {
 	 */
 	@Test
 	public void fetchFile() throws IOException {
-        byte[] fileContent = sxqClient.downloadFile("1046561");
-        FileOutputStream outputStream = new FileOutputStream("C:\\Users\\11044\\Desktop\\bbb.pdf");
-        outputStream.write(fileContent);
+		ResultInfo resultInfo = sxqClient.downloadFile("1046769");
+		if (resultInfo.isSuccess()){
+			byte[] fileContent = Base64.decodeBase64(resultInfo.getData() + "");
+			FileOutputStream outputStream = new FileOutputStream("C:\\Users\\admin\\Desktop\\aasdasd.pdf");
+			outputStream.write(fileContent);
+		}
+		System.out.println(resultInfo.getMessage());
     }
 
     /**

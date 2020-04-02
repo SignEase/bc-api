@@ -165,7 +165,6 @@ public class SxqClient {
             JSONObject data = (JSONObject) jsonObject.get("data");
             resultBase.setContractId(data.getLong("contractId"));
             resultBase.setSignUrl(data.getString("signUrl"));
-
             return resultBase;
         } catch (IOException e) {
             resultBase.setMessage(e.getMessage());
@@ -176,15 +175,14 @@ public class SxqClient {
     /**
      * 云存文件取回
      *
-     * @param storeNo 存储编号
+     * @param contractId 存储编号
      */
-    public byte[] downloadFile(String storeNo) {
+    public ResultInfo downloadFile(String contractId) {
         Map<String, String> params = new HashMap<>(3);
-        params.put("storeNo", storeNo);
-
+        params.put("contractId", contractId);
         try {
-            return YclNetUtil.doGetDownLoad(env.getCode() + SxqServiceEnum.FILE_DOWNLOAD.getCode(), params, getBaseHeader());
-
+            String s = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.FILE_DOWNLOAD.getCode(), params, 60000, 60000, getBaseHeader());
+            return JSONObject.parseObject(s, ResultInfo.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
