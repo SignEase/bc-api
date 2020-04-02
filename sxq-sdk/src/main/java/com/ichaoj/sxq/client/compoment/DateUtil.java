@@ -2,6 +2,7 @@ package com.ichaoj.sxq.client.compoment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtil {
@@ -34,5 +35,19 @@ public class DateUtil {
      */
     public static final DateFormat getFormat(String format) {
         return new SimpleDateFormat(format);
+    }
+
+    /**
+     * 获取指定时间的后num天时间
+     *
+     * @param date
+     * @return
+     */
+    public static Date getAfterDay(Date date, int num) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, num);
+        date = calendar.getTime();
+        return date;
     }
 }

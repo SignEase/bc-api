@@ -177,6 +177,10 @@ public class SxqSignatory implements Serializable {
 	 * 使用的审批流编号
 	 */
 	private Integer approvalNo;
+	/**
+	 * 签约截止时间
+	 */
+	private Date validTime;
 
 
 	public String getCertNo() {

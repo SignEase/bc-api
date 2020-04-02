@@ -148,6 +148,10 @@ public class SxqClient {
             if (order.getSxqSignatoryList().get(i).getSealSn() != null) {
                 params.put("yclSignatoryList[" + i + "].sealSn", order.getSxqSignatoryList().get(i).getSealSn());
             }
+
+            if (order.getSxqSignatoryList().get(i).getValidTime() != null) {
+                params.put("yclSignatoryList[" + i + "].validTimeStamp", order.getSxqSignatoryList().get(i).getValidTime().getTime() + "");
+            }
         }
 
         String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);

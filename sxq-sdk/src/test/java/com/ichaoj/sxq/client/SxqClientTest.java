@@ -2,11 +2,8 @@ package com.ichaoj.sxq.client;
 
 
 import com.ichaoj.sxq.client.beans.*;
-import com.ichaoj.sxq.client.compoment.BusinessNumberUtil;
-import com.ichaoj.sxq.client.compoment.ResultBase;
-import com.ichaoj.sxq.client.compoment.StoreResult;
+import com.ichaoj.sxq.client.compoment.*;
 import com.ichaoj.sxq.client.enums.*;
-import com.ichaoj.sxq.client.compoment.ResultInfo;
 import com.yiji.openapi.tool.fastjson.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SxqClientTest {
@@ -25,7 +23,7 @@ public class SxqClientTest {
 	
 	@BeforeClass
 	public static void init(){
-		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.LOCAL);
+		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.TEST);
 	}
 	/**
 	 * 测试服务器是否连通
@@ -53,7 +51,7 @@ public class SxqClientTest {
 	public void signatureTwoPeople(){
 		SignatoryApiOrder order = new SignatoryApiOrder();
 		SxqDataStore sxqDataStore = new SxqDataStore();
-		String filePath = "C:\\Users\\11044\\Desktop\\test.pdf";
+		String filePath = "C:\\Users\\admin\\Desktop\\AAA.pdf";
 //		把pdf文件放进参数中
 		getFileToPath(filePath, order);
 //		用户业务编号
@@ -101,6 +99,8 @@ public class SxqClientTest {
 		sxqSignatory1.setSignatureY(544d);
 		//签章页 （不填时默认最后一页）
 		sxqSignatory1.setSignaturePage(1);
+		//签约方签约的截止时间（如果截止时间设置为空，则默认设置为七天）
+		sxqSignatory1.setValidTime(DateUtil.getAfterDay(new Date(), 3));
 		//签章定位关键词（与x.y 必须二选一）
 //		sxqSignatory1.setKeywords("甲方签章");
 		//章的用途(签章类型为企业才有效)
@@ -688,7 +688,7 @@ public class SxqClientTest {
 	 **/
 	@Test
 	public void setCustomizedLogo(){
-		ResultInfo resultInfo = sxqClient.setCustomizedLogo("C:\\Users\\admin\\Desktop\\TIM图片20200331115327.png");
+		ResultInfo resultInfo = sxqClient.setCustomizedLogo("C:\\Users\\admin\\Desktop\\AA.png");
 		System.out.println(resultInfo);
 		System.out.println(JSONObject.toJSONString(resultInfo));
 	}
