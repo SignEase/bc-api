@@ -24,7 +24,7 @@ public class SxqClientTest {
 	
 	@BeforeClass
 	public static void init(){
-		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.LOCAL);
+		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.TEST);
 	}
 	/**
 	 * 测试服务器是否连通
@@ -637,7 +637,7 @@ public class SxqClientTest {
 		ResultInfo resultInfo = sxqClient.downloadFile("1046769");
 		if (resultInfo.isSuccess()){
 			byte[] fileContent = Base64.decodeBase64(resultInfo.getData() + "");
-			FileOutputStream outputStream = new FileOutputStream("C:\\Users\\admin\\Desktop\\aasdasd.pdf");
+			FileOutputStream outputStream = new FileOutputStream("C:\\Users\\admin\\Desktop\\a1.pdf");
 			outputStream.write(fileContent);
 		}
 		System.out.println(resultInfo.getMessage());
