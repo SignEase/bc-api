@@ -87,6 +87,7 @@ public class SxqClient {
         params.put("yclDataStore.userBizNumber", order.getSxqDataStore().getUserBizNumber());
         params.put("yclDataStore.storeName", order.getSxqDataStore().getStoreName());
         params.put("yclDataStore.isPublic", order.getSxqDataStore().getIsPublic());
+        params.put("yclDataStore.callBackUrl", order.getSxqDataStore().getCallBackUrl());
 
         for (int i = 0; i < order.getSxqSignatoryList().size(); i++) {
 
@@ -146,6 +147,15 @@ public class SxqClient {
             if (order.getSxqSignatoryList().get(i).getSealSn() != null) {
                 params.put("yclSignatoryList[" + i + "].sealSn", order.getSxqSignatoryList().get(i).getSealSn());
             }
+
+            // 如果设置了合同的截止时间，那么签约人的截止时间就设定为合同的截止时间，
+            // 如果给单个签约人设定的截止时间，以给签约人设置的截止时间为准
+            if (order.getSxqDataStore().getValidTimeStamp() != null) {
+                params.put("yclSignatoryList[" + i + "].validTimeStamp", order.getSxqDataStore().getValidTimeStamp() + "");
+            }
+            if (order.getSxqSignatoryList().get(i).getValidTimeStamp() != null) {
+                params.put("yclSignatoryList[" + i + "].validTimeStamp", order.getSxqSignatoryList().get(i).getValidTimeStamp() + "");
+            }
         }
 
         String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
@@ -153,6 +163,7 @@ public class SxqClient {
         try {
             String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.SIGNATORY.getCode(), params, 0, 0, this.appKey, this.appSecret);
 
+            System.out.println(json);
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));

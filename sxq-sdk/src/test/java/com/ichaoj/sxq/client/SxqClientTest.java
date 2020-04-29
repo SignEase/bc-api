@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SxqClientTest {
@@ -26,6 +27,7 @@ public class SxqClientTest {
 	@BeforeClass
 	public static void init(){
 		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.TEST);
+//		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.LOCAL);
 	}
 	/**
 	 * 测试服务器是否连通
@@ -53,25 +55,33 @@ public class SxqClientTest {
 	public void signatureTwoPeople(){
 		SignatoryApiOrder order = new SignatoryApiOrder();
 		SxqDataStore sxqDataStore = new SxqDataStore();
-		String filePath = "C:\\Users\\11044\\Desktop\\test.pdf";
+//		String filePath = "C:\\Users\\ichaoj\\Desktop\\bg.pdf";
+		String filePath = "C:\\Users\\ichaoj\\Desktop\\省心签体验合同.pdf";
 //		把pdf文件放进参数中
 		getFileToPath(filePath, order);
 //		用户业务编号
 		sxqDataStore.setUserBizNumber(BusinessNumberUtil.gainNumber());
 //		合同名称
-		sxqDataStore.setStoreName("《合同名称》");
+		sxqDataStore.setStoreName("《省心签体验合同》");
 //		是否公开
 		sxqDataStore.setIsPublic(StoreVisibleEnum.PUBLIC.getCode());
 //		签约的说明
         sxqDataStore.setTransAbs("这是存证说明");
 //		这是签约完成后回调通知的连接
-        sxqDataStore.setCallBackUrl("请求地址");
+//        sxqDataStore.setCallBackUrl("请求地址");
 //      是否按照设置的签约顺序进行签约（默认false）
         sxqDataStore.setSignSequence(false);
 //      是否对非签约人员展示合同预览（默认false）
         sxqDataStore.setShowSnapshot(false);
 //      是否强制要求签约人在签署合同完成后设置登陆密码（默认false）
         sxqDataStore.setSignatoryAddPassword(false);
+
+        // 设置回调参数
+        sxqDataStore.setCallBackUrl("https://mock.sxqian.com/api/callBackTest.json");
+
+        // 设置合同的截止时间
+		sxqDataStore.setValidTimeStamp(System.currentTimeMillis() + 60 * 60 * 24 * 1000 * 3);
+
 		order.setSxqDataStore(sxqDataStore);
 
 		//甲方
@@ -85,7 +95,7 @@ public class SxqClientTest {
 		// 签章类型 必填
 		sxqSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		sxqSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
+		sxqSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
 		// 签约用户类型 必填
 		sxqSignatory1.setSignatoryUserType(SignatoryUserTypeEnum.PERSONAL.getCode());
 		// 签约时间 必填
@@ -101,6 +111,9 @@ public class SxqClientTest {
 		sxqSignatory1.setSignatureY(544d);
 		//签章页 （不填时默认最后一页）
 		sxqSignatory1.setSignaturePage(1);
+
+//		sxqSignatory1.setValidTimeStamp(System.currentTimeMillis());
+
 		//签章定位关键词（与x.y 必须二选一）
 //		sxqSignatory1.setKeywords("甲方签章");
 		//章的用途(签章类型为企业才有效)
@@ -121,8 +134,6 @@ public class SxqClientTest {
 //		使用该签约方的审批流编号（仅sxqSignatory1.setUseApproval(true);时有效）
 //		sxqSignatory1.setApprovalNo(null);
 
-
-
 		//乙方
 		SxqSignatory sxqSignatory2 = new SxqSignatory();
 		// 签约人姓名 必填
@@ -138,7 +149,8 @@ public class SxqClientTest {
 		//签约方 必填
 		sxqSignatory2.setGroup(GroupsEnum.PARTY_B);
 		//签约人手机邮箱 选填
-		sxqSignatory2.setPhone("15923641266");
+		sxqSignatory2.setPhone("17311111120");
+//		sxqSignatory2.setEmail("xxll@qq.com");
 		//签约方证件号 选填
 		sxqSignatory2.setCertNo("430511198702173516");
 		//填了证件号就必选填证件类型
@@ -150,9 +162,14 @@ public class SxqClientTest {
 		//签章页 （不填时默认最后一页）
 		sxqSignatory2.setSignaturePage(1);
 
+		// 设置签约截止时间
+		sxqSignatory2.setValidTimeStamp(System.currentTimeMillis());
+
 		List<SxqSignatory> sxqSignatorylist = order.getSxqSignatoryList();
 		sxqSignatorylist.add(sxqSignatory1);
 		sxqSignatorylist.add(sxqSignatory2);
+
+		System.out.println(sxqSignatorylist);
 
 //		发送请求
 		StoreResult result = sxqClient.signatory(order);
@@ -166,7 +183,7 @@ public class SxqClientTest {
 	public void signaturePersonalAndEnterprise(){
 		SignatoryApiOrder order = new SignatoryApiOrder();
 		SxqDataStore sxqDataStore = new SxqDataStore();
-		String filePath = "C:\\Users\\11044\\Desktop\\test.pdf";
+		String filePath = "C:\\Users\\ichaoj\\Desktop\\bg.pdf";
 //		把pdf文件放进参数中
 		getFileToPath(filePath, order);
 //		用户业务编号
@@ -190,7 +207,7 @@ public class SxqClientTest {
 		// 签章类型 必填
 		sxqSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		sxqSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
+		sxqSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
 		// 签约用户类型 必填
 		sxqSignatory1.setSignatoryUserType(SignatoryUserTypeEnum.PERSONAL.getCode());
 		// 签约时间 必填

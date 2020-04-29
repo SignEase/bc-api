@@ -5,7 +5,8 @@ public enum Env {
 	ONLINE("https://sxqian.com", "线上环境"),
 	TEST("https://mock.sxqian.com", "测试环境"),
 	LOCAL_TEST("http://192.169.2.207:8086", "本地联调环境"),
-	LOCAL("http://127.0.0.1:7878", "本地环境");
+	LOCAL("http://127.0.0.1:7878", "本地环境"),
+	LOCAL1("http://192.168.31.216:7878", "本地环境");
 
 	private String code;
 	private String message;

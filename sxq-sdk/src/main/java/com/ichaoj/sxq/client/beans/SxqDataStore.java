@@ -182,6 +182,11 @@ public class SxqDataStore implements Serializable {
 	private Date rowAddTime;
 
 	/**
+	 * 合同的签约截止时间
+	 */
+	private Long validTimeStamp;
+
+	/**
 	 * 使用的合同模板ID
 	 */
 	private Long contractTemplateId;
@@ -648,7 +653,7 @@ public class SxqDataStore implements Serializable {
 	}
 
 	/**
-	 * 数据签名
+	 * 数据签好名
 	 * @mbggenerated
 	 */
 	public String getSign() {
