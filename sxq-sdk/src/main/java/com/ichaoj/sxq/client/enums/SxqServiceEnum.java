@@ -10,7 +10,9 @@ public enum SxqServiceEnum {
 	/** OCSV: on-chain storage & validation **/
 	OCSV("/api/ocsv.json", "上链存证服务"),
 	SIGNATORY("/api/draftContract.json", "签章服务"),
-	FILE_DOWNLOAD("/api/fileNotary.json", "文件下载");
+	FILE_DOWNLOAD("/api/checkAndDownload.json", "文件下载"),
+	QUERY_CUSTOMIZED_LOGO("/api/queryCustomizedLogo.json", "查询自定义logo"),
+	SET_CUSTOMIZED_LOGO("/api/setCustomizedLogo.json", "设置自定义logo"),;
 
 	private String code;
 	private String message;

@@ -2,11 +2,9 @@ package com.ichaoj.sxq.client;
 
 
 import com.ichaoj.sxq.client.beans.*;
-import com.ichaoj.sxq.client.compoment.BusinessNumberUtil;
-import com.ichaoj.sxq.client.compoment.ResultBase;
-import com.ichaoj.sxq.client.compoment.StoreResult;
+import com.ichaoj.sxq.client.compoment.*;
 import com.ichaoj.sxq.client.enums.*;
-import com.ichaoj.sxq.client.compoment.ResultInfo;
+import com.yiji.openapi.tool.codec.Base64;
 import com.yiji.openapi.tool.fastjson.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -95,7 +93,7 @@ public class SxqClientTest {
 		// 签章类型 必填
 		sxqSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		sxqSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
+		sxqSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
 		// 签约用户类型 必填
 		sxqSignatory1.setSignatoryUserType(SignatoryUserTypeEnum.PERSONAL.getCode());
 		// 签约时间 必填
@@ -112,9 +110,9 @@ public class SxqClientTest {
 		//签章页 （不填时默认最后一页）
 		sxqSignatory1.setSignaturePage(1);
 
-//		sxqSignatory1.setValidTimeStamp(System.currentTimeMillis());
-
-		//签章定位关键词（与x.y 必须二选一）
+		//签约方签约的截止时间（如果截止时间设置为空，则默认设置为七天）
+//		sxqSignatory1.setValidTime(DateUtil.getAfterDay(new Date(), 3));
+        //签章定位关键词（与x.y 必须二选一）
 //		sxqSignatory1.setKeywords("甲方签章");
 		//章的用途(签章类型为企业才有效)
 //		sxqSignatory1.setSealPurpose("合同专用章");
@@ -169,8 +167,6 @@ public class SxqClientTest {
 		sxqSignatorylist.add(sxqSignatory1);
 		sxqSignatorylist.add(sxqSignatory2);
 
-		System.out.println(sxqSignatorylist);
-
 //		发送请求
 		StoreResult result = sxqClient.signatory(order);
 		System.out.println(result.toString());
@@ -183,7 +179,7 @@ public class SxqClientTest {
 	public void signaturePersonalAndEnterprise(){
 		SignatoryApiOrder order = new SignatoryApiOrder();
 		SxqDataStore sxqDataStore = new SxqDataStore();
-		String filePath = "C:\\Users\\ichaoj\\Desktop\\bg.pdf";
+		String filePath = "C:\\Users\\11044\\Desktop\\test.pdf";
 //		把pdf文件放进参数中
 		getFileToPath(filePath, order);
 //		用户业务编号
@@ -207,7 +203,7 @@ public class SxqClientTest {
 		// 签章类型 必填
 		sxqSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		sxqSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
+		sxqSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
 		// 签约用户类型 必填
 		sxqSignatory1.setSignatoryUserType(SignatoryUserTypeEnum.PERSONAL.getCode());
 		// 签约时间 必填
@@ -650,9 +646,13 @@ public class SxqClientTest {
 	 */
 	@Test
 	public void fetchFile() throws IOException {
-        byte[] fileContent = sxqClient.downloadFile("1046561");
-        FileOutputStream outputStream = new FileOutputStream("C:\\Users\\11044\\Desktop\\bbb.pdf");
-        outputStream.write(fileContent);
+		ResultInfo resultInfo = sxqClient.downloadFile("1046769");
+		if (resultInfo.isSuccess()){
+			byte[] fileContent = Base64.decodeBase64(resultInfo.getData() + "");
+			FileOutputStream outputStream = new FileOutputStream("C:\\Users\\admin\\Desktop\\a1.pdf");
+			outputStream.write(fileContent);
+		}
+		System.out.println(resultInfo.getMessage());
     }
 
     /**
@@ -683,4 +683,30 @@ public class SxqClientTest {
 		String s = JSONObject.toJSONString(resultInfo);
 		System.out.println(s);
 	}
+
+    /**
+     * @author SOFAS
+     * @description 查询appkey用户的自定义logo
+     * @date  2020/4/1
+     * @return void
+     **/
+    @Test
+    public void queryCustomizedLogo(){
+        ResultInfo resultInfo = sxqClient.queryCustomizedLogo();
+        System.out.println(resultInfo);
+        System.out.println(JSONObject.toJSONString(resultInfo));
+    }
+
+    /**
+     * @author SOFAS
+     * @description 设置appkey用户的自定义logo
+     * @date  2020/4/1
+     * @return void
+     **/
+    @Test
+    public void setCustomizedLogo(){
+        ResultInfo resultInfo = sxqClient.setCustomizedLogo("C:\\Users\\admin\\Desktop\\AA.png");
+        System.out.println(resultInfo);
+        System.out.println(JSONObject.toJSONString(resultInfo));
+    }
 }

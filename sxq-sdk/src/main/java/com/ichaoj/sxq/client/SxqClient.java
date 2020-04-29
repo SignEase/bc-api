@@ -15,9 +15,11 @@ import com.yiji.openapi.tool.fastjson.JSONObject;
 import com.yiji.openapi.tool.util.DigestUtil;
 import com.yiji.openapi.tool.util.DigestUtil.DigestALGEnum;
 import com.yiji.openapi.tool.util.StringUtils;
+import sun.misc.BASE64Encoder;
 
 import java.io.IOException;
-import java.util.Date;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,7 @@ public class SxqClient {
     public ResultBase ping() {
         ResultBase resultBase = new ResultBase();
         try {
-            String json = YclNetUtil.doPost(this.env.getCode() + SxqServiceEnum.PING.getCode(), null, 30000, 30000, this.appKey, this.appSecret);
+            String json = YclNetUtil.doPost(this.env.getCode() + SxqServiceEnum.PING.getCode(), null, 30000, 30000, getBaseHeader());
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));
@@ -60,7 +62,7 @@ public class SxqClient {
         String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
         params.put("sign", signStr);
         try {
-            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.STORE.getCode(), params, 30000, 30000, this.appKey, this.appSecret);
+            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.STORE.getCode(), params, 30000, 30000, getBaseHeader());
 
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
@@ -161,16 +163,14 @@ public class SxqClient {
         String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
         params.put("sign", signStr);
         try {
-            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.SIGNATORY.getCode(), params, 0, 0, this.appKey, this.appSecret);
+            String json = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.SIGNATORY.getCode(), params, 0, 0, getBaseHeader());
 
-            System.out.println(json);
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));
             JSONObject data = (JSONObject) jsonObject.get("data");
             resultBase.setContractId(data.getLong("contractId"));
             resultBase.setSignUrl(data.getString("signUrl"));
-
             return resultBase;
         } catch (IOException e) {
             resultBase.setMessage(e.getMessage());
@@ -181,15 +181,14 @@ public class SxqClient {
     /**
      * 云存文件取回
      *
-     * @param storeNo 存储编号
+     * @param contractId 存储编号
      */
-    public byte[] downloadFile(String storeNo) {
+    public ResultInfo downloadFile(String contractId) {
         Map<String, String> params = new HashMap<>(3);
-        params.put("storeNo", storeNo);
-
+        params.put("contractId", contractId);
         try {
-            return YclNetUtil.doGetDownLoad(env.getCode() + SxqServiceEnum.FILE_DOWNLOAD.getCode(), params, this.appKey, this.appSecret);
-
+            String s = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.FILE_DOWNLOAD.getCode(), params, 60000, 60000, getBaseHeader());
+            return JSONObject.parseObject(s, ResultInfo.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -197,18 +196,11 @@ public class SxqClient {
 
     /**
      * @author SOFAS
-     * @description     数据存证
-     * @date  2019/9/19
-     * @param
-     * @return com.ichaoj.ycl.client.compoment.ResultInfo
-     **/
-    /**
-     * @author SOFAS
      * @description         数据存证
      * @date  2019/9/19
-      * @param ocsvs            待存证的数据
+      * @param ocsvs        待存证的数据
      * @param storeId       最佳存证信息的存证编号（有存证编号时会对已有的存证主体进行追加操作，没有则会创建一个新的存证主体）
-     * @param isPublic             是否公开（选择公开则被查询时会直接显示所有信息，否则将会对关键信息脱敏）
+     * @param isPublic      是否公开（选择公开则被查询时会直接显示所有信息，否则将会对关键信息脱敏）
      * @param callback      追加存证成功后的回调接口（没有时存证成功后不会自动回调，需要手动到查询小插件查看是否已存证上链成功）
      * @param storeName     存证名称
      * @return com.ichaoj.ycl.client.compoment.ResultInfo
@@ -228,6 +220,32 @@ public class SxqClient {
         return YclNetUtil.ocsv(new OcsvRequst(this.appKey, this.appSecret, env.getCode(), storeId, s, isPublic, callback, storeName));
     }
 
+    public ResultInfo queryCustomizedLogo(){
+        try {
+            String res = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.QUERY_CUSTOMIZED_LOGO.getCode(), null, 60000, 60000, getBaseHeader());
+            return JSONObject.parseObject(res, ResultInfo.class);
+        } catch (IOException e) {
+            return ResultInfo.error(e.getMessage());
+        }
+    }
+
+    public ResultInfo setCustomizedLogo(String logoPath){
+        if (StringUtils.isBlank(logoPath)){
+            return ResultInfo.error("logo文件路径不能为空");
+        }
+        try {
+            HashMap<String, String> params = new HashMap<>();
+            byte[] bytes = Files.readAllBytes(Paths.get(logoPath));
+            BASE64Encoder encoder = new BASE64Encoder();
+            String logoBase64 = encoder.encodeBuffer(bytes);
+            params.put("logoBase64", logoBase64);
+            String res = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.SET_CUSTOMIZED_LOGO.getCode(), params, 60000, 60000, getBaseHeader());
+            return JSONObject.parseObject(res, ResultInfo.class);
+        } catch (IOException e) {
+            return ResultInfo.error(e.getMessage());
+        }
+    }
+
     private String ocsvDeal(List<Ocsv> l){
         for (Ocsv o : l){
             List<Ocsv> sb = o.getSubOcsv();
@@ -239,14 +257,10 @@ public class SxqClient {
         return JSONObject.toJSONString(l);
     }
 
-    private String doGet(SxqServiceEnum yclServiceEnum, Map<String, String> params) throws IOException {
-        String reqUrl = env.getCode() + yclServiceEnum.getCode();
-        return YclNetUtil.doGet(reqUrl, params);
-    }
-
-    private String doPost(SxqServiceEnum yclServiceEnum, Map<String, String> params, int connectTimeout,
-                          int readTimeout) throws IOException {
-        String reqUrl = env.getCode() + yclServiceEnum.getCode();
-        return YclNetUtil.doPost(reqUrl, params, connectTimeout, readTimeout, this.appKey, this.appSecret);
+    private HashMap<String, String> getBaseHeader(){
+        HashMap<String, String> headerMap = new HashMap<>();
+        headerMap.put("x-sxq-open-accesstoken", this.appKey);
+        headerMap.put("x-sxq-open-accesssecret", this.appSecret);
+        return headerMap;
     }
 }
