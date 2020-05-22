@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class SxqClientTest {
@@ -36,6 +35,31 @@ public class SxqClientTest {
 		System.out.println(result.toString());
 	}
 
+	@Test
+	public void realNameAuthPerson() {
+		UserRealNameInfo userRealNameInfo = new UserRealNameInfo();
+        userRealNameInfo.setRealName("试试");
+        userRealNameInfo.setCertNo("500235199412169110");
+        userRealNameInfo.setMobile("18700001111");
+        userRealNameInfo.setType("GR");
+        ResultInfo resultInfo = sxqClient.realNameCertification(userRealNameInfo);
+        System.out.println(resultInfo);
+    }
+
+    @Test
+    public void realNameAuthEnterprise() {
+        UserRealNameInfo userRealNameInfo = new UserRealNameInfo();
+        userRealNameInfo.setRealName("慢慢");
+        userRealNameInfo.setCertNo("500235199412169110");
+        userRealNameInfo.setMobile("18711112222");
+        userRealNameInfo.setType("JG");
+        userRealNameInfo.setEnterpriseCertNo("91500000MA5UCYU7ZY");
+        userRealNameInfo.setEnterpriseRealName("慢慢科技");
+        userRealNameInfo.setEnterpriseCertType(CertTypeEnum.BUSINESS_LICENCE.getCode());
+        ResultInfo resultInfo = sxqClient.realNameCertification(userRealNameInfo);
+        System.out.println(resultInfo);
+    }
+
 	/********************************** 注意 ***************************************/
 	/** #1 需要注意如果签约人设置了手机号或邮箱的，会作为账户的唯一标识：
 	 /** a）如果该标识找到已存在账户的，会直接使用已存在账户下的信息进行签约，如：实名信息。
@@ -54,7 +78,7 @@ public class SxqClientTest {
 		SignatoryApiOrder order = new SignatoryApiOrder();
 		SxqDataStore sxqDataStore = new SxqDataStore();
 //		String filePath = "C:\\Users\\ichaoj\\Desktop\\bg.pdf";
-		String filePath = "C:\\Users\\ichaoj\\Desktop\\省心签体验合同.pdf";
+		String filePath = "C:\\Users\\ichaoj\\Desktop\\合同\\省心签体验合同.pdf";
 //		把pdf文件放进参数中
 		getFileToPath(filePath, order);
 //		用户业务编号
@@ -93,7 +117,7 @@ public class SxqClientTest {
 		// 签章类型 必填
 		sxqSignatory1.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		sxqSignatory1.setSignatoryAuto(BooleanEnum.NO.getCode());
+		sxqSignatory1.setSignatoryAuto(BooleanEnum.YES.getCode());
 		// 签约用户类型 必填
 		sxqSignatory1.setSignatoryUserType(SignatoryUserTypeEnum.PERSONAL.getCode());
 		// 签约时间 必填
@@ -109,10 +133,12 @@ public class SxqClientTest {
 		sxqSignatory1.setSignatureY(544d);
 		//签章页 （不填时默认最后一页）
 		sxqSignatory1.setSignaturePage(1);
-
 		//签约方签约的截止时间（如果截止时间设置为空，则默认设置为七天）
 //		sxqSignatory1.setValidTime(DateUtil.getAfterDay(new Date(), 3));
-        //签章定位关键词（与x.y 必须二选一）
+
+//		sxqSignatory1.setValidTimeStamp(System.currentTimeMillis());
+
+		//签章定位关键词（与x.y 必须二选一）
 //		sxqSignatory1.setKeywords("甲方签章");
 		//章的用途(签章类型为企业才有效)
 //		sxqSignatory1.setSealPurpose("合同专用章");
@@ -147,7 +173,7 @@ public class SxqClientTest {
 		//签约方 必填
 		sxqSignatory2.setGroup(GroupsEnum.PARTY_B);
 		//签约人手机邮箱 选填
-		sxqSignatory2.setPhone("17311111120");
+		sxqSignatory2.setPhone("18700001111");
 //		sxqSignatory2.setEmail("xxll@qq.com");
 		//签约方证件号 选填
 		sxqSignatory2.setCertNo("430511198702173516");
@@ -167,6 +193,8 @@ public class SxqClientTest {
 		sxqSignatorylist.add(sxqSignatory1);
 		sxqSignatorylist.add(sxqSignatory2);
 
+		System.out.println(sxqSignatorylist);
+
 //		发送请求
 		StoreResult result = sxqClient.signatory(order);
 		System.out.println(result.toString());
@@ -179,23 +207,25 @@ public class SxqClientTest {
 	public void signaturePersonalAndEnterprise(){
 		SignatoryApiOrder order = new SignatoryApiOrder();
 		SxqDataStore sxqDataStore = new SxqDataStore();
-		String filePath = "C:\\Users\\11044\\Desktop\\test.pdf";
+		String filePath = "C:\\Users\\ichaoj\\Desktop\\合同\\bg.pdf";
 //		把pdf文件放进参数中
 		getFileToPath(filePath, order);
 //		用户业务编号
 		sxqDataStore.setUserBizNumber(BusinessNumberUtil.gainNumber());
 //		合同名称
-		sxqDataStore.setStoreName("《合同名称》");
+		sxqDataStore.setStoreName("《测试合同》");
 //		是否公开
 		sxqDataStore.setIsPublic(StoreVisibleEnum.PUBLIC.getCode());
 //		签约的说明
 		sxqDataStore.setTransAbs("这是存证说明");
+//		回调地址
+		sxqDataStore.setCallBackUrl("https://mock.sxqian.com/api/callBackTest.json");
 		order.setSxqDataStore(sxqDataStore);
 
 		//甲方
 		SxqSignatory sxqSignatory1 = new SxqSignatory();
 		// 签约人姓名 必填
-		sxqSignatory1.setRealName("甲方");
+		sxqSignatory1.setRealName("试试");
 		//签约方证件号
 		sxqSignatory1.setCertNo("430511198702173516");
 		//证件类型
@@ -211,7 +241,7 @@ public class SxqClientTest {
 		//签约方 必填
 		sxqSignatory1.setGroup(GroupsEnum.PARTY_A);
 		//签约人手机邮箱 选填
-		sxqSignatory1.setPhone("15923641267");
+		sxqSignatory1.setPhone("18700001111");
 		sxqSignatory1.setSignatureX(106d);
 		//签章y坐标 （不填写时系统自动生成）
 		sxqSignatory1.setSignatureY(544d);
@@ -221,23 +251,28 @@ public class SxqClientTest {
 		//乙方
 		SxqSignatory sxqSignatory2 = new SxqSignatory();
 		// 签约人姓名 必填
-		sxqSignatory2.setRealName("乙方企业账户账户");
+		sxqSignatory2.setRealName("慢慢科技");
 		// 签章类型 必填
 		sxqSignatory2.setSealType(SealTypeEnum.OFFICIAL.getCode());
+//		sxqSignatory2.setSealType(SealTypeEnum.PERSONAL.getCode());
 		// 是否自动签约  必填
-		sxqSignatory2.setSignatoryAuto(BooleanEnum.YES.getCode());
+//		sxqSignatory2.setSignatoryAuto(BooleanEnum.YES.getCode());
+		sxqSignatory2.setSignatoryAuto(BooleanEnum.NO.getCode());
 		// 签约用户类型 必填
 		sxqSignatory2.setSignatoryUserType(SignatoryUserTypeEnum.ENTERPRISE.getCode());
+//		sxqSignatory2.setSignatoryUserType(SignatoryUserTypeEnum.PERSONAL.getCode());
 		// 签约时间 必填
 		sxqSignatory2.setSignatoryTime("2020-08-06");
 		//签约方 必填
 		sxqSignatory2.setGroup(GroupsEnum.PARTY_B);
 		//签约人手机邮箱 选填
-		sxqSignatory2.setPhone("15923641265");
+		sxqSignatory2.setPhone("18722223333");
 		//签约方证件号 选填
 		sxqSignatory2.setCertNo("91500000MA5UCYU7XX");
+//		sxqSignatory2.setCertNo("500235199412169110");
 		//填了证件号就必选填证件类型
 		sxqSignatory2.setCertType(CertTypeEnum.BUSINESS_LICENCE.getCode());
+//		sxqSignatory2.setCertType(CertTypeEnum.IDENTITY_CARD.getCode());
 		//签章x坐标 （不填写时系统自动生成）
 		sxqSignatory2.setSignatureX(377d);
 		//签章y坐标 （不填写时系统自动生成）

@@ -1,9 +1,6 @@
 package com.ichaoj.sxq.client;
 
-import com.ichaoj.sxq.client.beans.SignatoryApiOrder;
-import com.ichaoj.sxq.client.beans.StoreApiOrder;
-import com.ichaoj.sxq.client.beans.Ocsv;
-import com.ichaoj.sxq.client.beans.OcsvRequst;
+import com.ichaoj.sxq.client.beans.*;
 import com.ichaoj.sxq.client.compoment.ResultBase;
 import com.ichaoj.sxq.client.compoment.ResultInfo;
 import com.ichaoj.sxq.client.compoment.StoreResult;
@@ -14,7 +11,7 @@ import com.ichaoj.sxq.client.enums.SxqServiceEnum;
 import com.yiji.openapi.tool.fastjson.JSONObject;
 import com.yiji.openapi.tool.util.DigestUtil;
 import com.yiji.openapi.tool.util.DigestUtil.DigestALGEnum;
-import com.yiji.openapi.tool.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import sun.misc.BASE64Encoder;
 
 import java.io.IOException;
@@ -70,6 +67,51 @@ public class SxqClient {
             resultBase.setContractId(Long.valueOf(jsonObject.getString("storeNo")));
             return resultBase;
         } catch (IOException e) {
+            resultBase.setMessage(e.getMessage());
+            return resultBase;
+        }
+    }
+
+    public ResultInfo realNameCertification(UserRealNameInfo userRealNameInfo) {
+        ResultInfo resultBase = new ResultInfo();
+        try {
+            userRealNameInfo.check();
+        } catch (Exception e) {
+            resultBase.setSuccess(false);
+            resultBase.setMessage(e.getMessage());
+            return resultBase;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("certNo", userRealNameInfo.getCertNo());
+        params.put("realName", userRealNameInfo.getRealName());
+        if (StringUtils.isNotBlank(userRealNameInfo.getEnterpriseRealName())) {
+            params.put("enterpriseRealName", userRealNameInfo.getEnterpriseRealName());
+        }
+        if (StringUtils.isNotBlank(userRealNameInfo.getEnterpriseCertType())) {
+            params.put("enterpriseCertType", userRealNameInfo.getEnterpriseCertType());
+        }
+        if (StringUtils.isNotEmpty(userRealNameInfo.getEnterpriseCertNo())) {
+            params.put("enterpriseCertNo", userRealNameInfo.getEnterpriseCertNo());
+        }
+        if (StringUtils.isNotBlank(userRealNameInfo.getMobile())) {
+            params.put("mobile", userRealNameInfo.getMobile());
+        }
+        if (StringUtils.isNotBlank(userRealNameInfo.getMail())) {
+            params.put("mail", userRealNameInfo.getMail());
+        }
+        params.put("type", userRealNameInfo.getType());
+
+        String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
+        params.put("sign", signStr);
+        try {
+            String reponse = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.REALNAMEAUTH.getCode(), params, 0, 0, getBaseHeader());
+            JSONObject jsonObject = JSONObject.parseObject(reponse);
+            resultBase.setSuccess(jsonObject.getBooleanValue("success"));
+            resultBase.setMessage(jsonObject.getString("message"));
+            return resultBase;
+        } catch (Exception e) {
+            resultBase.setSuccess(false);
             resultBase.setMessage(e.getMessage());
             return resultBase;
         }
