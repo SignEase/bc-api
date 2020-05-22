@@ -98,7 +98,71 @@ com.ichaoj.sxq.client.SxqClientTest#ping
 ```
 ---
 
-#### 接口二 文件保全
+---
+
+#### 接口二 用户快速实名认证接口
+
+给用户（个人、企业）进行注册并且实名认证
+
+##### *具体请求*
+```
+/api/realNameCertification.json
+```
+
+##### *请求示例*
+```
+https://mock.sxqian.com/api/realNameCertification.json?realName=张三
+&certNo=4355343544353ssss54
+&mobile=13511111111
+&type=GR
+```
+
+##### *参数*
+```
+|字段                   |       类型|可否空  |默认    |注释              |
+|:----                 |:-------   |:---   |---    |------             |
+|realName              |String     |否     |       | [企业法人]姓名    |
+|certNo                |String     |否     |       | [法人]身份证号    |
+|enterpriseRealName    |String     |是     |       | 企业名称         |
+|enterpriseCertNo      |String     |是     |       |  企业证书号      |
+|enterpriseCertType    |String     |是     |       | 企业证书类型      |
+|mobile                |String     |是     |       |  [法人]手机号    |
+|mail                  |String     |是     |       |  [法人]邮箱      |
+|type                  |String     |否     |       |  个人用户("GR") | 企业用户 ("JG") |
+```
+
+##### *请求成功*
+
+```
+{
+success:"true", 
+message:"实名认证成功"
+}
+```
+
+##### *请求失败*
+
+```
+{
+success:"false",
+message:"invalid idcard"
+}
+```
+
+##### *返回参数说明*
+|字段          |      注释
+|:----         |:-------   
+|success      |是否成功，true为成功，false为失败
+|message      |返回信息
+
+##### *示例代码*
+```
+com.ichaoj.sxq.client.SxqClientTest#realNameAuthPerson
+```
+---
+
+
+#### 接口三 文件保全
 
 对文件进行保全，目前仅支持`Base64`编码格式。
 
@@ -164,7 +228,7 @@ com.ichaoj.sxq.client.SxqClientTest#fileStore
 
 ---
 
-#### 接口三 电子签约
+#### 接口四 电子签约
 
 用户发起一次电子签约，签约调用方必须包含甲方。可以有`多签约人`和`多签约方`，目前支持`自动签约`和`手动签约`两种方式。
 - 一次电子签约过程中，可以为不同的签约人选择`自动签约`与`手动签约`，即一份签约文件里面可以存在多种签约方式。
@@ -276,7 +340,7 @@ com.ichaoj.sxq.client.SxqClientTest#signature
 
 ---
 
-#### 接口四 司法存证
+#### 接口五 司法存证
 将一组数据和文件进行上链存证。
 
 ##### *具体请求*
@@ -352,7 +416,7 @@ com.ichaoj.sxq.client.SxqClientTest#ocsv
 
 ---
 
-#### 接口五 取回文件
+#### 接口六 取回文件
 取回电子签约或存证的文件，返回的是数据流。
 
 ##### *具体请求*
@@ -391,7 +455,7 @@ https://mock.sxqian.com/api/fileNotary.json?appKey=%E6%82%A8%E7%9A%84appKey
 com.ichaoj.sxq.client.SxqClientTest#fetchFile
 
 
-#### 接口六 查询已设置的自定义logo
+#### 接口七 查询已设置的自定义logo
 查询已设置的自定义logo，返回logo的预览网址
 
 ##### *具体请求*
@@ -449,7 +513,7 @@ https://mock.sxqian.com/api/queryCustomizedLogo.json
 com.ichaoj.sxq.client.SxqClientTest#queryCustomizedLogo
 
 
-#### 接口七 设置或修改的自定义logo
+#### 接口八 设置或修改的自定义logo
 设置或修改的自定义logo
 
 ##### *具体请求*
