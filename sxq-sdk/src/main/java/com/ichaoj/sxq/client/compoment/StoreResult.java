@@ -9,18 +9,18 @@ public class StoreResult extends ResultBase {
     /**
      * 存储编号
      */
-    private Long contractId;
+    private String contractId;
 
     /**
      * 签署链接
      */
     private String signUrl;
 
-    public Long getContractId() {
+    public String getContractId() {
         return contractId;
     }
 
-    public void setContractId(Long contractId) {
+    public void setContractId(String contractId) {
         this.contractId = contractId;
     }
 

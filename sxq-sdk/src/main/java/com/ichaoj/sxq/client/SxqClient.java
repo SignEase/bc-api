@@ -64,7 +64,7 @@ public class SxqClient {
             JSONObject jsonObject = JSONObject.parseObject(json);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));
-            resultBase.setContractId(Long.valueOf(jsonObject.getString("storeNo")));
+            resultBase.setContractId(jsonObject.getString("storeNo"));
             return resultBase;
         } catch (IOException e) {
             resultBase.setMessage(e.getMessage());
@@ -211,7 +211,7 @@ public class SxqClient {
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));
             JSONObject data = (JSONObject) jsonObject.get("data");
-            resultBase.setContractId(data.getLong("contractId"));
+            resultBase.setContractId(data.getString("contractId"));
             resultBase.setSignUrl(data.getString("signUrl"));
             return resultBase;
         } catch (IOException e) {
