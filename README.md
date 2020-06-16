@@ -16,7 +16,7 @@
     <repository>
         <id>sxq-repo</id>
         <name>sxq repository</name>
-        <url>http://nexus.ichaoj.com/nexus/content/groups/public/</url>
+        <url>http://nexus.ichaoj.com/repository/thirdparty/</url>
         <releases>
             <enabled>true</enabled>
         </releases>
