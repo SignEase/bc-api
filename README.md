@@ -373,6 +373,8 @@ https://mock.sxqian.com/api/ocsv.json
 |appKey        |String        |否            |              | 用户appkey    |
 |appSecret     |String        |否            |              |  用户appSecret   |
 
+* 注: 请求参数中 data.subOcsv 中type=FILE时, 链接中如果存在特殊字符时, 请使用 URLEncoder.encode(url, "UTF-8") 处理链接
+
 ##### *请求成功*
 ```
 {
