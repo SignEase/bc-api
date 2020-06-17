@@ -409,8 +409,11 @@ https://mock.sxqian.com/api/ocsv.json
 * 回调失败: 回调失败，系统会进行重试，每小时会重新请求失败的回调地址，重试的次数为10次，10次之后不再回调
 
 回调请求说明：
-method: POST 
+
+method: POST
+
 content-type: application/x-www-form-urlencoded; charset=UTF-8
+
 data: 回调请求的 UrlEncodedFormEntity 具体参数:
 
 字段         |类型       |空   |注释                                 |
