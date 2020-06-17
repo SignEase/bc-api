@@ -402,16 +402,33 @@ https://mock.sxqian.com/api/ocsv.json
 |code     |Integer  |是 |    |   请求码  |
 
 ##### *回调监听*
-在设置的回调接收接口，接收参数名为 hashCode 的参数即可获取到上链的豆匣链hash与司法链hash（因上链时间不一样，所以，回调的也不是固定的）
+在设置的回调接收接口使用时，回调接口会在每个链上链成功后调用一次，目前系统中使用了亦来云链与司法链，即正常情况下会回调两次，
 
-回调返回参数中data具体参数:
+* 回调成功: 回调成功以 Http Status == 200 系统认定为回调成功
+* 回调时间: 亦来云链每4分钟上一次链，司法链每整点上链一次
+* 回调失败: 回调失败，系统会进行重试，每小时会重新请求失败的回调地址，重试的次数为10次，10次之后不再回调
 
-字段      |类型     |空   |注释                                 |
-|:----    |:------- |:--- |------                              |
-|storeId  |Long     |否   | 是否成功 true 为成功，false 为失败  |
-|sepId    |Long     |否   | 描述，失败时为失败原因              |
-|hash     |Long     |是   | 存证编号                           |
+回调请求说明：
+method: POST 
+content-type: application/x-www-form-urlencoded; charset=UTF-8
+data: 回调请求的 UrlEncodedFormEntity 具体参数:
 
+字段         |类型       |空   |注释                                 |
+|:----       |:-------   |:--- |------                              |
+|storeId     |String     |否   | 存证编号, 对应请求成功时返回的存证编号      |
+|chainType   |String     |否   | 上链类型(司法链: SifaChain, 亦来云: ElastosChain); 当出现回调失败时，可能会出现两种，以逗号隔开:"SifaChain,ElastosChain"    |
+|hash        |String     |否   | 链上hash值的json数据，示例:{"SifaChain":"90198153101eb5c4e20c94eb1e56662fb188a3c6ce5da98485c37287f22a8614"} |
+|message     |String     |否   | 提示信息                           |
+
+回调请求HTTP示例
+```
+POST /api/ocsvCallBackTest.json HTTP/1.1
+Host: mock.sxqian.com
+Content-Type: application/x-www-form-urlencoded
+Cookie: SUPSESSIONID=BB87DFAE62F0C0D097EEE0215253CF60
+
+storeId=1047438&chainType=SifaChain&hash=90198153101eb5c4e20c94eb1e56662fb188a3c6ce5da98485c37287f22a8614&message=SifaChain: 上链成功
+```
 ##### *示例代码*
 
 com.ichaoj.sxq.client.SxqClientTest#ocsv
