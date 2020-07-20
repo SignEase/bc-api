@@ -72,7 +72,29 @@ public class SxqClient {
         }
     }
 
+    /**
+     * 个人|企业 实名认证
+     */
     public ResultInfo realNameCertification(UserRealNameInfo userRealNameInfo) {
+        String realNameUrl = env.getCode() + SxqServiceEnum.REALNAMEAUTH.getCode();
+        return certificationByUrl(userRealNameInfo, realNameUrl);
+    }
+
+    /**
+     * 重新认证企业信息
+     */
+    public ResultInfo enterpriseReCertification(UserRealNameInfo userRealNameInfo) {
+        if (!"JG".equals(userRealNameInfo.getType())) {
+            return ResultInfo.error("type mast be JG");
+        }
+        String recertUrl = env.getCode() + SxqServiceEnum.ENTERPRISE_REALNAME_REAUTH.getCode();
+        return certificationByUrl(userRealNameInfo, recertUrl);
+    }
+
+    /**
+     * 生成用户认证信息, 并请求认证接口
+     */
+    private ResultInfo certificationByUrl(UserRealNameInfo userRealNameInfo, String url) {
         ResultInfo resultBase = new ResultInfo();
         try {
             userRealNameInfo.check();
@@ -105,7 +127,7 @@ public class SxqClient {
         String signStr = DigestUtil.digest(params, this.appSecret, DigestALGEnum.MD5);
         params.put("sign", signStr);
         try {
-            String reponse = YclNetUtil.doPost(env.getCode() + SxqServiceEnum.REALNAMEAUTH.getCode(), params, 0, 0, getBaseHeader());
+            String reponse = YclNetUtil.doPost(url, params, 0, 0, getBaseHeader());
             JSONObject jsonObject = JSONObject.parseObject(reponse);
             resultBase.setSuccess(jsonObject.getBooleanValue("success"));
             resultBase.setMessage(jsonObject.getString("message"));

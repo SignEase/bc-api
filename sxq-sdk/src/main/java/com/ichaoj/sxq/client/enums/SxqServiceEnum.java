@@ -10,6 +10,7 @@ public enum SxqServiceEnum {
 	/** OCSV: on-chain storage & validation **/
 	OCSV("/api/ocsv.json", "上链存证服务"),
 	REALNAMEAUTH("/api/realNameCertification.json", "授信实名认证"),
+    ENTERPRISE_REALNAME_REAUTH("/api/enterprise/recertification.json", "授信企业重新认证"),
 	SIGNATORY("/api/draftContract.json", "签章服务"),
 	FILE_DOWNLOAD("/api/checkAndDownload.json", "文件下载"),
 	QUERY_CUSTOMIZED_LOGO("/api/queryCustomizedLogo.json", "查询自定义logo"),
@@ -32,7 +33,7 @@ public enum SxqServiceEnum {
 
 	/**
 	 * Get All Enum Value
-	 * 
+	 *
 	 * @return List<String>
 	 */
 	public static java.util.List<String> getAllEnumCode() {

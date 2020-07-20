@@ -20,7 +20,7 @@ import java.util.List;
 public class SxqClientTest {
 
 	public static SxqClient sxqClient;
-	
+
 	@BeforeClass
 	public static void init(){
 		sxqClient = new SxqClient("20200303093507658157","3daca3b13ef04e7f8a751d74c8318a1f", Env.TEST);
@@ -60,7 +60,24 @@ public class SxqClientTest {
         System.out.println(resultInfo);
     }
 
-	/********************************** 注意 ***************************************/
+    /**
+     * 重新企业认证信息
+     */
+    @Test
+    public void reauthEnterprise() {
+        UserRealNameInfo userRealNameInfo = new UserRealNameInfo();
+        userRealNameInfo.setRealName("王也");
+        userRealNameInfo.setCertNo("330782200509075351");
+        userRealNameInfo.setMobile("15122223333");
+        userRealNameInfo.setType("JG");
+        userRealNameInfo.setEnterpriseCertNo("777706000MA5UCYHYJ");
+        userRealNameInfo.setEnterpriseRealName("也科技公司");
+        userRealNameInfo.setEnterpriseCertType(CertTypeEnum.BUSINESS_LICENCE.getCode());
+        ResultInfo resultInfo = sxqClient.enterpriseReCertification(userRealNameInfo);
+        System.out.println(resultInfo);
+    }
+
+    /********************************** 注意 ***************************************/
 	/** #1 需要注意如果签约人设置了手机号或邮箱的，会作为账户的唯一标识：
 	 /** a）如果该标识找到已存在账户的，会直接使用已存在账户下的信息进行签约，如：实名信息。
 	 /** b）如果该标识没有查找到已存在账户的，则会用设置的信息创建新的账户信息，并完成签合约。
